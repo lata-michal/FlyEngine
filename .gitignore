@@ -67,3 +67,10 @@ ipch/
 
 !Dependencies/GLFW/build/src/Release/
 !glfw3.lib
+
+!Dependencies/ASSIMP/assimp-5.2.5/build/lib/Release/
+!assimp-vc143-mt.lib
+
+!Dependencies/ASSIMP/assimp-5.2.5/build/lib/Debug/
+!assimp-vc143-mtd.lib
+
