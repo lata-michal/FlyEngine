@@ -65,4 +65,4 @@ ipch/
 *.sln.docstates
 *.filters
 
-!FlyEngine/Dependencies/GLFW/build/src/Release/glfw3.lib
+!Dependencies/GLFW/build/src/Release/glfw3.lib
