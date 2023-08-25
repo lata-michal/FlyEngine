@@ -1,0 +1,71 @@
+# Blender 3.5.1 MTL File: 'None'
+# www.blender.org
+
+newmtl Beacon
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd source/OceanGate Titan/OceanGate Titan/OceanGate Titan.fbm/Beacon_Base_color.png
+map_Ns source/OceanGate Titan/OceanGate Titan/OceanGate Titan.fbm/Beacon_Roughness.png
+map_refl source/OceanGate Titan/OceanGate Titan/OceanGate Titan.fbm/Beacon_Metallic.png
+map_Bump -bm 1.000000 source/OceanGate Titan/OceanGate Titan/OceanGate Titan.fbm/Beacon_Normal.png
+
+newmtl Body
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd source/OceanGate Titan/OceanGate Titan/OceanGate Titan.fbm/Body_Base_color.png
+map_Ns source/OceanGate Titan/OceanGate Titan/OceanGate Titan.fbm/Body_Roughness.png
+map_refl source/OceanGate Titan/OceanGate Titan/OceanGate Titan.fbm/Body_Metallic.png
+
+newmtl Chrome
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd source/OceanGate Titan/OceanGate Titan/OceanGate Titan.fbm/Chrome_Base_color.png
+map_Ns source/OceanGate Titan/OceanGate Titan/OceanGate Titan.fbm/Chrome_Roughness.png
+map_refl source/OceanGate Titan/OceanGate Titan/OceanGate Titan.fbm/Chrome_Metallic.png
+map_Bump -bm 1.000000 source/OceanGate Titan/OceanGate Titan/OceanGate Titan.fbm/Chrome_Normal.png
+
+newmtl Trim
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd source/OceanGate Titan/OceanGate Titan/OceanGate Titan.fbm/Trim_Base_color.png
+map_Ns source/OceanGate Titan/OceanGate Titan/OceanGate Titan.fbm/Trim_Roughness.png
+map_refl source/OceanGate Titan/OceanGate Titan/OceanGate Titan.fbm/Trim_Metallic.png
+map_Bump -bm 1.000000 source/OceanGate Titan/OceanGate Titan/OceanGate Titan.fbm/Trim_Normal_OpenGL.png
+
+newmtl Viewport
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd source/OceanGate Titan/OceanGate Titan/OceanGate Titan.fbm/Viewport_Base_color.png
+map_Ns source/OceanGate Titan/OceanGate Titan/OceanGate Titan.fbm/Viewport_Roughness.png
+map_refl source/OceanGate Titan/OceanGate Titan/OceanGate Titan.fbm/Viewport_Metallic.png
+
+newmtl Window
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd source/OceanGate Titan/OceanGate Titan/OceanGate Titan.fbm/Window_Base_color.png
+map_Ns source/OceanGate Titan/OceanGate Titan/OceanGate Titan.fbm/Window_Roughness.png
+map_refl source/OceanGate Titan/OceanGate Titan/OceanGate Titan.fbm/Window_Metallic.png

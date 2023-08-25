@@ -1,0 +1,13 @@
+C:/Dev/Visual Studio/OpenGL-CppCourse/Dependencies/ASSIMP/assimp-5.2.5/build/CMakeFiles/uninstall.dir
+C:/Dev/Visual Studio/OpenGL-CppCourse/Dependencies/ASSIMP/assimp-5.2.5/build/CMakeFiles/UpdateAssimpLibsDebugSymbolsAndDLLs.dir
+C:/Dev/Visual Studio/OpenGL-CppCourse/Dependencies/ASSIMP/assimp-5.2.5/build/CMakeFiles/INSTALL.dir
+C:/Dev/Visual Studio/OpenGL-CppCourse/Dependencies/ASSIMP/assimp-5.2.5/build/CMakeFiles/ALL_BUILD.dir
+C:/Dev/Visual Studio/OpenGL-CppCourse/Dependencies/ASSIMP/assimp-5.2.5/build/CMakeFiles/ZERO_CHECK.dir
+C:/Dev/Visual Studio/OpenGL-CppCourse/Dependencies/ASSIMP/assimp-5.2.5/build/contrib/zlib/CMakeFiles/zlibstatic.dir
+C:/Dev/Visual Studio/OpenGL-CppCourse/Dependencies/ASSIMP/assimp-5.2.5/build/contrib/zlib/CMakeFiles/INSTALL.dir
+C:/Dev/Visual Studio/OpenGL-CppCourse/Dependencies/ASSIMP/assimp-5.2.5/build/contrib/zlib/CMakeFiles/ALL_BUILD.dir
+C:/Dev/Visual Studio/OpenGL-CppCourse/Dependencies/ASSIMP/assimp-5.2.5/build/code/CMakeFiles/assimp.dir
+C:/Dev/Visual Studio/OpenGL-CppCourse/Dependencies/ASSIMP/assimp-5.2.5/build/code/CMakeFiles/INSTALL.dir
+C:/Dev/Visual Studio/OpenGL-CppCourse/Dependencies/ASSIMP/assimp-5.2.5/build/test/CMakeFiles/unit.dir
+C:/Dev/Visual Studio/OpenGL-CppCourse/Dependencies/ASSIMP/assimp-5.2.5/build/test/CMakeFiles/INSTALL.dir
+C:/Dev/Visual Studio/OpenGL-CppCourse/Dependencies/ASSIMP/assimp-5.2.5/build/test/headercheck/CMakeFiles/INSTALL.dir

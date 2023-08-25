@@ -1,0 +1,93 @@
+
+newmtl Standard30712C
+Kd  0.1882353 0.4431373 0.172549
+Ks  0 0 0
+Ka  0 0 0
+d  1
+Ns  0
+illum 2
+map_Kd d5722f3f-891f-4190-bde1-9a3b4be53a18.png
+
+
+
+newmtl StandardCAB53C
+Kd  0.7921569 0.7098039 0.2352941
+Ks  0 0 0
+Ka  0 0 0
+d  1
+Ns  0
+illum 2
+map_Kd d5722f3f-891f-4190-bde1-9a3b4be53a18.png
+
+
+
+newmtl FlatBF00006ae3009c-8e93-4ff8-bfc3-4b3565483b90
+Kd  0.7490196 0 0
+Ks  0 0 0
+Ka  0 0 0
+d  1
+Ns  0
+illum 0
+map_Kd 6ae3009c-8e93-4ff8-bfc3-4b3565483b90.png
+
+
+
+
+newmtl Standard575750
+Kd  0.3411765 0.3411765 0.3137255
+Ks  0 0 0
+Ka  0 0 0
+d  1
+Ns  0
+illum 2
+map_Kd d5722f3f-891f-4190-bde1-9a3b4be53a18.png
+
+
+
+newmtl Flat6DAE44ae041969-74d7-497e-991b-d56f5f23a75f
+Kd  0.427451 0.682353 0.2666667
+Ks  0 0 0
+Ka  0 0 0
+d  1
+Ns  0
+illum 0
+map_Kd ae041969-74d7-497e-991b-d56f5f23a75f.png
+
+
+
+
+newmtl FlatFFFFFF7881b6f8-cfa1-4499-bfc7-41b72d91fe55
+Kd  1 1 1
+Ks  0 0 0
+Ka  0 0 0
+d  1
+Ns  0
+illum 0
+map_Kd 7881b6f8-cfa1-4499-bfc7-41b72d91fe55.png
+
+
+
+
+newmtl FlatFFFFFFe56d3cc8-5eeb-414a-8311-ec32a04bf80e
+Kd  1 1 1
+Ks  0 0 0
+Ka  0 0 0
+d  1
+Ns  0
+illum 0
+map_Kd e56d3cc8-5eeb-414a-8311-ec32a04bf80e.png
+
+
+
+
+newmtl FlatFFFFFFd5722f3f-891f-4190-bde1-9a3b4be53a18
+Kd  1 1 1
+Ks  0 0 0
+Ka  0 0 0
+d  1
+Ns  0
+illum 0
+map_Kd d5722f3f-891f-4190-bde1-9a3b4be53a18.png
+
+
+

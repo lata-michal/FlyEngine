@@ -1,0 +1,167 @@
+# Blender 3.5.1 MTL File: 'plane.blend'
+# www.blender.org
+
+newmtl M_Engine
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd M_Engine_baseColor.png
+map_Bump -bm 1.000000 M_Engine_normal.png
+
+newmtl M_Engine_Exhausts
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd M_Engine_Exhausts_baseColor.png
+map_Bump -bm 1.000000 M_Engine_Exhausts_normal.png
+
+newmtl M_Engine_Rim
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd M_Engine_Rim_baseColor.png
+map_Bump -bm 1.000000 M_Engine_Rim_normal.png
+
+newmtl M_Engine_Spiral
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd M_Engine_Spiral_baseColor.png
+map_Bump -bm 1.000000 M_Engine_Spiral_normal.png
+
+newmtl M_Exhaust
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd M_Exhaust_baseColor.png
+map_Bump -bm 1.000000 M_Exhaust_normal.png
+
+newmtl M_Fins
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd M_Fins_baseColor.png
+map_Bump -bm 1.000000 M_Fins_normal.png
+
+newmtl M_Flaps
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd M_Flaps_baseColor.png
+map_Bump -bm 1.000000 M_Flaps_normal.png
+
+newmtl M_Fusel_Lodge
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd M_Fusel_Lodge_baseColor.png
+map_Bump -bm 1.000000 M_Fusel_Lodge_normal.png
+
+newmtl M_Inner_Engine
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd M_Inner_Engine_baseColor.png
+map_Bump -bm 1.000000 M_Inner_Engine_normal.png
+
+newmtl M_Propellers
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd M_Propellers_baseColor.png
+map_Bump -bm 1.000000 M_Propellers_normal.png
+
+newmtl M_Tail
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd M_Tail_baseColor.png
+map_Bump -bm 1.000000 M_Tail_normal.png
+
+newmtl M_Tail_Wings
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd M_Tail_Wings_baseColor.png
+map_Bump -bm 1.000000 M_Tail_Wings_normal.png
+
+newmtl M_Windowframe
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd M_Windowframe_baseColor.png
+map_Bump -bm 1.000000 M_Windowframe_normal.png
+
+newmtl M_Windows
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd M_Windows_baseColor.png
+map_Bump -bm 1.000000 M_Windows_normal.png
+
+newmtl M_Wings
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd M_Wings_baseColor.png
+map_Bump -bm 1.000000 M_Wings_normal.png
