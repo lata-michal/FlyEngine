@@ -74,3 +74,8 @@ ipch/
 !Dependencies/ASSIMP/assimp-5.2.5/build/lib/Debug/
 !assimp-vc143-mtd.lib
 
+!Dependencies/ASSIMP/assimp-5.2.5/build/contrib/zlib/Debug/
+!zlibstaticd.lib
+
+!Dependencies/ASSIMP/assimp-5.2.5/build/contrib/zlib/Release/
+!zlibstatic.lib
