@@ -46,6 +46,7 @@ bld/
 
 *.idb
 *.lib
+!glfw3.lib
 *.exe
 
 ipch/
