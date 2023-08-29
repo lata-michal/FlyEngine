@@ -1144,7 +1144,7 @@ bool Scene::RenderScene5(HWND hText)
 
     Timer timer;
 
-    Camera camera(3.0f, 1.5f, -30.0f, glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, 90.0f, 100.0f, 45.0f);
+    Camera camera(0.0f, 2.5f, -22.0f, glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, 90.0f, 50.0f, 45.0f);
 
     camera.AddKeyBinding(GLFW_KEY_ESCAPE, KeyActions::EXIT);
     camera.AddKeyBinding(GLFW_KEY_W, KeyActions::FORWARD);
@@ -1171,9 +1171,9 @@ bool Scene::RenderScene5(HWND hText)
 
     Shader shaderSkybox(fileSys.GetExecutableDirPath() + "\\res\\shaders\\skybox.shader");
     Shader shaderPlane(fileSys.GetExecutableDirPath() + "\\res\\shaders\\plane.shader");
-    shaderPlane.SetUniform1f("uMaterial.shininess", 32.0f);
+    shaderPlane.SetUniform1f("uMaterial.shininess", 16.0f);
 
-    glm::vec3 ambientDirlightColor(0.2f, 0.2f, 0.2f);
+    glm::vec3 ambientDirlightColor(0.3f, 0.22f, 0.22f);
     glm::vec3 diffuseDirlightColor(0.8f, 0.4f, 0.4f);
     glm::vec3 specularDirlightColor(0.8f, 0.6f, 0.6f);
 
@@ -1185,7 +1185,7 @@ bool Scene::RenderScene5(HWND hText)
     float posX = 0.0f;
     float posY = 0.0f;
     float posZ = 0.0f;
-    float rotation = 0.0f;
+    float rotation = -90.0f;
     float direction = 1.0f;
 
     while (!Window::WindowShouldClose() && !m_ForcedEnd)
@@ -1210,7 +1210,7 @@ bool Scene::RenderScene5(HWND hText)
 
         if (roundf(rotation) == 283.0f)
             direction *= (-1.0f);
-        if(roundf(rotation) == -360.0f)
+        if (roundf(rotation) == -360.0f)
             direction *= (-1.0f);
 
         rotation += timer.GetDeltaTime() * 30.0f * direction;
@@ -1621,8 +1621,8 @@ bool Scene::RenderScene9(HWND hText)
 
     Timer timer;
 
-    Camera camera(0.0f, 0.0f, 3.0f);
-
+    Camera camera(-1.5f, 2.5f, 6.0f, glm::vec3(0.0f, 1.0f, 0.0f), -15.0f, -80.0f, 3.0f, 45.0f);
+     
     camera.AddKeyBinding(GLFW_KEY_ESCAPE, KeyActions::EXIT);
     camera.AddKeyBinding(GLFW_KEY_W, KeyActions::FORWARD);
     camera.AddKeyBinding(GLFW_KEY_A, KeyActions::LEFT);
@@ -1632,8 +1632,51 @@ bool Scene::RenderScene9(HWND hText)
     camera.AddMouseBinding(0, MouseActions::LOOKAROUND);
     camera.AddScrollBinding(0, ScrollActions::ZOOM);
 
+    std::vector<float> cubeVertices = {
+        -1.0f,  1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  1.0f,  1.0f, -1.0f, -1.0f, 1.0f,
+         1.0f, -1.0f, -1.0f, 1.0f, -1.0f,  1.0f,1.0f,  1.0f,  1.0f, 1.0f,  1.0f,  1.0f,1.0f,  1.0f, -1.0f, 1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f, -1.0f,  1.0f,  1.0f, 1.0f,  1.0f,  1.0f, 1.0f,  1.0f,  1.0f, 1.0f, -1.0f,  1.0f, -1.0f, -1.0f, 1.0f,
+        -1.0f,  1.0f, -1.0f, 1.0f,  1.0f, -1.0f, 1.0f,  1.0f,  1.0f, 1.0f,  1.0f,  1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  1.0f, -1.0f,
+        -1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  1.0f, 1.0f, -1.0f,  1.0f
+    };
+
+
+    VertexLayout cubeVerticesLayout;
+    cubeVerticesLayout.AddVec3(0);
+
+    Mesh cube(cubeVertices, cubeVerticesLayout);
+
+    std::vector<float> planeVertices = {
+        -10.0f, 0.0f, -10.0f, 0.0f, 1.0f, 0.0f, 0.0f, 10.0f,
+        -10.0f, 0.0f, 10.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+        10.0f, 0.0f, 10.0f, 0.0f, 1.0f, 0.0f, 10.0f, 0.0f,
+        10.0f, 0.0f, -10.0f, 0.0f, 1.0f, 0.0f, 10.0f, 10.0f
+    };
+
+    VertexLayout planeVerticesLayout;
+    planeVerticesLayout.AddVec3(0);
+    planeVerticesLayout.AddVec3(1);
+    planeVerticesLayout.AddVec2(2);
+
+    std::vector<uint32_t> planeIndices = {
+        2, 1, 0,
+        3, 2, 0
+    };
+
+    Texture planeTexture(fileSys.GetExecutableDirPath() + "\\res\\textures\\wood.png", "texture_diffuse", GL_REPEAT);
+    std::vector<Texture> planeVecTexture = { planeTexture };
+
+    Mesh plane(planeVertices, planeIndices, planeVecTexture, planeVerticesLayout);
+
+    Shader planeShader(fileSys.GetExecutableDirPath() + "\\res\\shaders\\floorBlin.shader");
+    planeShader.SetUniform1f("uMaterial.shininess", 32.0f);
+    planeShader.SetUniformVec3f("uLightPos", glm::vec3(0.0f, 0.5f, 0.0f));
+
+    Shader lightSourceShader(fileSys.GetExecutableDirPath() + "\\res\\shaders\\blinSource.shader");
+
     Window::EnableFaceCulling();
-    Window::SetCCWFaceCulling();
+    Window::SetCWFaceCulling();
 
     while (!Window::WindowShouldClose() && !m_ForcedEnd)
     {
@@ -1647,6 +1690,23 @@ bool Scene::RenderScene9(HWND hText)
 
         Window::Clear(0.0f, 0.0f, 0.0f, 1.0f, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), static_cast<float>(Window::GetWidth()) / static_cast<float>(Window::GetHeight()), 0.1f, 100.0f);
+        glm::mat4 view = camera.GetViewMatrix();
+
+        planeShader.Bind();
+        planeShader.SetUniformMat4f("uMVP", projection * view);
+        planeShader.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
+
+        plane.Draw(planeShader);
+
+        glm::mat4 model(1);
+        model = glm::translate(model, glm::vec3(0.0f, 0.5f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.05f));
+
+        lightSourceShader.Bind();
+        lightSourceShader.SetUniformMat4f("uMVP", projection * view * model);
+
+        cube.Draw(lightSourceShader);
 
         Window::SwapBuffers();
         Window::PollEvents();

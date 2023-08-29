@@ -29,13 +29,15 @@ static std::unique_ptr<std::thread> thScene;
 static bool bDevLogToggle = false;
 static bool bReadOnly = true;
 static HWND hText;
+static HWND hButtonExecution;
+static uint32_t index = 0;
 static std::vector<std::wstring> avCommands = {
     L"-msc sandbox",
     L"-ubo test",
     L"-gs test", 
-    L"-bs phong test",
+    L"-phong shading test",
     L"-quad instancing test",
-    L"-scene 9",
+    L"-blinn phong shading test",
     L"-scene 10",
     L"-scene 11",
     L"-scene 12",
@@ -113,7 +115,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
     HWND hButton10 = CreateWindowEx(0, L"BUTTON", L"Dbg - Toggle Console Mode", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
         15, 600, 400, 50, hWnd, (HMENU)ID_BUTTON10, hInstance, NULL);
 
-    HWND hButton11 = CreateWindowEx(0, L"BUTTON", L"Execute Console Command", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+    hButtonExecution = CreateWindowEx(0, L"BUTTON", L"Execute Console Command", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
         430, 600, 355, 50, hWnd, (HMENU)ID_BUTTON11, hInstance, NULL);
 
 
@@ -134,7 +136,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
     SendMessage(hButton8, WM_SETFONT, (WPARAM)hFont, MAKELPARAM(TRUE, 0));
     SendMessage(hButton9, WM_SETFONT, (WPARAM)hFont, MAKELPARAM(TRUE, 0));
     SendMessage(hButton10, WM_SETFONT, (WPARAM)hFont, MAKELPARAM(TRUE, 0));
-    SendMessage(hButton11, WM_SETFONT, (WPARAM)hFont, MAKELPARAM(TRUE, 0));
+    SendMessage(hButtonExecution, WM_SETFONT, (WPARAM)hFont, MAKELPARAM(TRUE, 0));
     SendMessage(hText, WM_SETFONT, (WPARAM)hFont, MAKELPARAM(TRUE, 0));
     SendMessage(hText, EM_SETREADONLY, TRUE, 0);
 
@@ -261,7 +263,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 }
 
                 std::wstring wmessage = prevText +
-                    L"\r\nCommand line mode.\r\nType your command between two slashes. Example: /any command/.\r\nAvailable commands : \r\n";
+                    L"\r\nCommand line mode.\r\nType your command between two slashes. Example: /any command/.\r\nAvailable commands : \r\nres\r\n";
 
                 for (auto& command : avCommands)
                     wmessage += (L"launch " + command + L"\r\n");
@@ -292,12 +294,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (!thScene)
                     {
                         thScene.reset(new std::thread(Scene::RenderScene1, hText));
+                        index = 0;
                     }
                     else
                     {
                         Scene::ForceEnd();
                         thScene.get()->join();
                         thScene.reset(new std::thread(Scene::RenderScene1, hText));
+                        index = 0;
                     }
                     SetWindowText(hText, L"");
                 }
@@ -306,12 +310,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (!thScene)
                     {
                         thScene.reset(new std::thread(Scene::RenderScene2, hText));
+                        index = 1;
                     }
                     else
                     {
                         Scene::ForceEnd();
                         thScene.get()->join();
                         thScene.reset(new std::thread(Scene::RenderScene2, hText));
+                        index = 1;
                     }
                     SetWindowText(hText, L"");
                 }
@@ -320,12 +326,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (!thScene)
                     {
                         thScene.reset(new std::thread(Scene::RenderScene3, hText));
+                        index = 2;
                     }
                     else
                     {
                         Scene::ForceEnd();
                         thScene.get()->join();
                         thScene.reset(new std::thread(Scene::RenderScene3, hText));
+                        index = 2;
                     }
                     SetWindowText(hText, L"");
                 }
@@ -334,12 +342,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (!thScene)
                     {
                         thScene.reset(new std::thread(Scene::RenderScene4, hText));
+                        index = 3;
                     }
                     else
                     {
                         Scene::ForceEnd();
                         thScene.get()->join();
                         thScene.reset(new std::thread(Scene::RenderScene4, hText));
+                        index = 3;
                     }
                     SetWindowText(hText, L"");
                 }
@@ -348,12 +358,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (!thScene)
                     {
                         thScene.reset(new std::thread(Scene::RenderScene6, hText));
+                        index = 4;
                     }
                     else
                     {
                         Scene::ForceEnd();
                         thScene.get()->join();
                         thScene.reset(new std::thread(Scene::RenderScene6, hText));
+                        index = 4;
                     }
                     SetWindowText(hText, L"");
                 }
@@ -362,12 +374,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (!thScene)
                     {
                         thScene.reset(new std::thread(Scene::RenderScene9, hText));
+                        index = 5;
                     }
                     else
                     {
                         Scene::ForceEnd();
                         thScene.get()->join();
                         thScene.reset(new std::thread(Scene::RenderScene9, hText));
+                        index = 5;
                     }
                     SetWindowText(hText, L"");
                 }
@@ -376,12 +390,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (!thScene)
                     {
                         thScene.reset(new std::thread(Scene::RenderScene10, hText));
+                        index = 6;
                     }
                     else
                     {
                         Scene::ForceEnd();
                         thScene.get()->join();
                         thScene.reset(new std::thread(Scene::RenderScene10, hText));
+                        index = 6;
                     }
                     SetWindowText(hText, L"");
                 }
@@ -390,12 +406,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (!thScene)
                     {
                         thScene.reset(new std::thread(Scene::RenderScene11, hText));
+                        index = 7;
                     }
                     else
                     {
                         Scene::ForceEnd();
                         thScene.get()->join();
                         thScene.reset(new std::thread(Scene::RenderScene11, hText));
+                        index = 7;
                     }
                     SetWindowText(hText, L"");
                 }
@@ -404,12 +422,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (!thScene)
                     {
                         thScene.reset(new std::thread(Scene::RenderScene12, hText));
+                        index = 8;
                     }
                     else
                     {
                         Scene::ForceEnd();
                         thScene.get()->join();
                         thScene.reset(new std::thread(Scene::RenderScene12, hText));
+                        index = 8;
                     }
                     SetWindowText(hText, L"");
                     }
@@ -418,12 +438,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (!thScene)
                     {
                         thScene.reset(new std::thread(Scene::RenderScene13, hText));
+                        index = 9;
                     }
                     else
                     {
                         Scene::ForceEnd();
                         thScene.get()->join();
                         thScene.reset(new std::thread(Scene::RenderScene13, hText));
+                        index = 9;
                     }
                     SetWindowText(hText, L"");
                 }
@@ -432,12 +454,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (!thScene)
                     {
                         thScene.reset(new std::thread(Scene::RenderScene14, hText));
+                        index = 10;
                     }
                     else
                     {
                         Scene::ForceEnd();
                         thScene.get()->join();
                         thScene.reset(new std::thread(Scene::RenderScene14, hText));
+                        index = 10;
                     }
                     SetWindowText(hText, L"");
                     }
@@ -446,12 +470,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (!thScene)
                     {
                         thScene.reset(new std::thread(Scene::RenderScene15, hText));
+                        index = 11;
                     }
                     else
                     {
                         Scene::ForceEnd();
                         thScene.get()->join();
                         thScene.reset(new std::thread(Scene::RenderScene15, hText));
+                        index = 11;
                     }
                     SetWindowText(hText, L"");
                 }
@@ -460,12 +486,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (!thScene)
                     {
                         thScene.reset(new std::thread(Scene::RenderScene16, hText));
+                        index = 12;
                     }
                     else
                     {
                         Scene::ForceEnd();
                         thScene.get()->join();
                         thScene.reset(new std::thread(Scene::RenderScene16, hText));
+                        index = 12;
                     }
                     SetWindowText(hText, L"");
                 }
@@ -475,6 +503,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     SetWindowText(hText, wmessage.c_str());
                     SendMessage(hText, EM_LINESCROLL, 0, 3000000);
                 }
+            }
+            else if (regexTextFind(prevText, L"/res/"))
+            {
+                SetWindowText(hText, std::wstring(L"/launch " + avCommands[index] + L"/").c_str());
+                SendMessage(hButtonExecution, BM_CLICK, 0, 0);
             }
             else
             {
