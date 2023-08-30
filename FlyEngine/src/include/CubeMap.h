@@ -57,12 +57,20 @@ namespace feng {
                 if (buffer)
                 {
                     uint32_t colorChannels = 0;
-                    if (nrChannels == 3)
-                        colorChannels = GL_RGB;
-                    else if (nrChannels == 4)
-                        colorChannels = GL_RGBA;
+                    uint32_t externalColorChannels = 0;
 
-                    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, colorChannels, width, height, 0, colorChannels, GL_UNSIGNED_BYTE, buffer);
+                    if (nrChannels == 3)
+                    {
+                        colorChannels = GL_SRGB;
+                        externalColorChannels = GL_RGB;
+                    }
+                    else if (nrChannels == 4)
+                    {
+                        colorChannels = GL_SRGB_ALPHA;
+                        externalColorChannels = GL_RGBA;
+                    }
+
+                    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, colorChannels, width, height, 0, externalColorChannels, GL_UNSIGNED_BYTE, buffer);
                     stbi_image_free(buffer);
                 }
                 else

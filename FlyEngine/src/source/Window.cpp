@@ -90,6 +90,7 @@ void Window::Initialize(int32_t width, int32_t height, const char* title, bool f
             glViewport(0, 0, m_Width, m_Height);
             glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_LESS);
+            glEnable(GL_FRAMEBUFFER_SRGB);
 
             if (fullscreen)
                 SetFullscreen(true);

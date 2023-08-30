@@ -219,13 +219,13 @@ bool Scene::RenderScene1(HWND hText)
 
     CubeMap skybox(skyboxTextures);
 
-    glm::vec3 ambientDirlightColor(0.4f, 0.4f, 0.4f);
-    glm::vec3 diffuseDirlightColor(0.8f, 0.8f, 0.8f);
+    glm::vec3 ambientDirlightColor(0.2f, 0.2f, 0.2f);
+    glm::vec3 diffuseDirlightColor(0.5f, 0.5f, 0.5f);
     glm::vec3 specularDirlightColor(0.8f, 0.8f, 0.8f);
 
-    glm::vec3 ambientPointColor(0.2f, 0.2f, 0.2f);
-    glm::vec3 diffusePointColor(0.8f, 0.3f, 0.3f);
-    glm::vec3 specularPointColor(0.8f, 0.3f, 0.3f);
+    glm::vec3 ambientPointColor(0.0f, 0.0f, 0.0f);
+    glm::vec3 diffusePointColor(1.0f, 0.3f, 0.3f);
+    glm::vec3 specularPointColor(1.0f, 0.3f, 0.3f);
 
     Timer timer;
 
@@ -1000,11 +1000,11 @@ bool Scene::RenderScene4(HWND hText)
 
     glm::vec3 ambientPointColor(0.0f, 0.0f, 0.0f);
     glm::vec3 diffusePointColor(0.4f, 0.2f, 0.2f);
-    glm::vec3 specularPointColor(0.6f, 0.3f, 0.3f);
+    glm::vec3 specularPointColor(0.8f, 0.8f, 0.8f);
 
     glm::vec3 ambientSpotlightColor(0.0f, 0.0f, 0.0f);
-    glm::vec3 diffuseSpotlightColor(0.4f);
-    glm::vec3 specularSpotlightColor(0.4f);
+    glm::vec3 diffuseSpotlightColor(0.0f);
+    glm::vec3 specularSpotlightColor(0.0f);
 
     glm::vec3 lightPosition(1.0f, 1.0f, -2.0f);
 
@@ -1173,8 +1173,8 @@ bool Scene::RenderScene5(HWND hText)
     Shader shaderPlane(fileSys.GetExecutableDirPath() + "\\res\\shaders\\plane.shader");
     shaderPlane.SetUniform1f("uMaterial.shininess", 16.0f);
 
-    glm::vec3 ambientDirlightColor(0.3f, 0.22f, 0.22f);
-    glm::vec3 diffuseDirlightColor(0.8f, 0.4f, 0.4f);
+    glm::vec3 ambientDirlightColor(0.15f, 0.07f, 0.07f);
+    glm::vec3 diffuseDirlightColor(0.6f, 0.3f, 0.3f);
     glm::vec3 specularDirlightColor(0.8f, 0.6f, 0.6f);
 
     Window::SetFullscreen(true);
@@ -1451,6 +1451,8 @@ bool Scene::RenderScene7(HWND hText)
         glm::mat4 model = glm::mat4(1);
         
         model = glm::translate(model, glm::vec3(0.0f, -3.0f, 0.0f));
+        model = glm::rotate(model, static_cast<float>(glfwGetTime()) * 0.04f, glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(30.0f), glm::vec3(0.0f, -1.0f, 1.0f));
         model = glm::scale(model, glm::vec3(12.0f));
 
         shaderPlanet.Bind();
@@ -1522,9 +1524,9 @@ bool Scene::RenderScene8(HWND hText)
     Shader shaderTitan(fileSys.GetExecutableDirPath() + "\\res\\shaders\\titan.shader");
     shaderTitan.SetUniform1f("uMaterial.shininess", 32.0f);
 
-    glm::vec3 ambientDirlightColor(0.1f, 0.1f, 0.4f);
-    glm::vec3 diffuseDirlightColor(0.2f, 0.2f, 0.8f);
-    glm::vec3 specularDirlightColor(0.3f, 0.3f, 0.6f);
+    glm::vec3 ambientDirlightColor(0.01f, 0.01f, 0.4f);
+    glm::vec3 diffuseDirlightColor(0.1f, 0.1f, 0.4f);
+    glm::vec3 specularDirlightColor(0.3f, 0.3f, 0.3f);
 
     glm::vec3 ambientSpotlightColor(0.0f, 0.0f, 0.0f);
     glm::vec3 diffuseSpotlightColor(0.6f);
@@ -1549,7 +1551,7 @@ bool Scene::RenderScene8(HWND hText)
         Window::SetDeltaTime(timer.GetDeltaTime());
         Window::SetWindowTitle("FlyEngine : -)    FPS: " + timer.GetStringFPS());
 
-        Window::Clear(0.0f, 0.0f, 0.1f, 1.0f, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        Window::Clear(0.0f, 0.0f, std::powf(0.15f, 2.2f), 1.0f, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), static_cast<float>(Window::GetWidth()) / static_cast<float>(Window::GetHeight()), 0.1f, 10000.0f);
         glm::mat4 view = camera.GetViewMatrix();

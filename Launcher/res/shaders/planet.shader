@@ -31,7 +31,7 @@ uniform Material uMaterial;
 
 void main()
 {
-    fragmentColor = texture(uMaterial.texture_diffuse1, oTexCoord) * vec4(0.9);
+    fragmentColor = texture(uMaterial.texture_diffuse1, oTexCoord) * vec4(0.5);
 }
 
 

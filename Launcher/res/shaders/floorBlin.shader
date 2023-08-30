@@ -55,6 +55,8 @@ void main()
     vec3 normal = normalize(vs_in.normal);
     float diff = max(dot(lightDir, normal), 0.0);
     vec3 diffuse = diff * color;
+    float distance = length(uLightPos - vs_in.fragPos);
+    float attenuation = 1.0 / distance;
 
     float spec = 0.0;
     if(diff != 0.0)
@@ -65,5 +67,5 @@ void main()
     }
     vec3 specular = spec * vec3(0.3);
 
-    fragmentColor = vec4(ambient + diffuse + specular, 1.0);
+    fragmentColor = vec4(ambient * attenuation + diffuse * attenuation + specular * attenuation, 1.0);
 }
