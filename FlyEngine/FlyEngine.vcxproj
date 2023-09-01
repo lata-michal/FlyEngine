@@ -270,6 +270,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\include\DepthMap.h" />
     <ClInclude Include="src\include\Camera.h" />
     <ClInclude Include="src\include\Actions.h" />
     <ClInclude Include="src\include\CubeMap.h" />

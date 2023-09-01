@@ -224,6 +224,11 @@ bool Window::WindowShouldClose()
     return glfwWindowShouldClose(m_Window.get());
 }
 
+void feng::Window::Clear(uint32_t mask)
+{
+    glClear(mask);
+}
+
 void Window::Clear(float r, float g, float b, float a, uint32_t mask)
 {
     glClearColor(r, g, b, a);

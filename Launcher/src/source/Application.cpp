@@ -38,7 +38,7 @@ static std::vector<std::wstring> avCommands = {
     L"-phong shading test",
     L"-quad instancing test",
     L"-blinn phong shading test",
-    L"-scene 10",
+    L"-shadow mapping test",
     L"-scene 11",
     L"-scene 12",
     L"-scene 13",

@@ -7,6 +7,7 @@
 #include "FrameBuffer.h"
 #include "UniformBuffer.h"
 #include "CubeMap.h"
+#include "DepthMap.h"
 
 #include "Log.h"
 
