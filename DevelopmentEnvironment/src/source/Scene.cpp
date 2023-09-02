@@ -1821,17 +1821,20 @@ bool Scene::RenderScene10(HWND hText)
 
     Mesh plane(planeVertices, planeIndices, planeVecTexture, planeVerticesLayout);
 
-    Shader solidShader(fileSys.GetExecutableDirPath() + "\\res\\shaders\\solid.shader");
-    solidShader.SetUniform1i("uDebug", 1);
-    Shader depthMapShader(fileSys.GetExecutableDirPath() + "\\res\\shaders\\depthmap.shader");
-    depthMapShader.SetUniform1i("uDepthMap", 0);
-
     DepthMap dMap(1024, 1024);
 
     float nearPlane = 1.0f;
     float farPlane = 7.5f;
 
     glm::vec3 lightPos(-2.0f, 4.0f, -1.0f);
+
+    Shader depthMap(fileSys.GetExecutableDirPath() + "\\res\\shaders\\depthmap.shader");
+    Shader depthMapVisualDebug(fileSys.GetExecutableDirPath() + "\\res\\shaders\\depthmapdebug.shader");
+    depthMapVisualDebug.SetUniform1i("uDepthMap", 1);
+    Shader sceneWShadowMap(fileSys.GetExecutableDirPath() + "\\res\\shaders\\scenewshadows.shader");
+    sceneWShadowMap.SetUniform1i("uDepthMap", 1);
+    sceneWShadowMap.SetUniform1f("uMaterial.shininess", 64.0f);
+    sceneWShadowMap.SetUniformVec3f("uLightPos", lightPos);
 
     Window::EnableFaceCulling();
     Window::SetCCWFaceCulling();
@@ -1856,58 +1859,108 @@ bool Scene::RenderScene10(HWND hText)
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 model = glm::mat4(1);
         
-        Window::SetViewport(0, 0, dMap.GetTexWidth(), dMap.GetTexHeight());
         dMap.Bind();
+        Window::SetViewport(0, 0, dMap.GetTexWidth(), dMap.GetTexHeight());
         Window::Clear(GL_DEPTH_BUFFER_BIT);
         
+        /*render scene from light perspective for depth map*/
+
         model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
 
-        solidShader.Bind();
-        solidShader.SetUniformMat4f("uMVP", lightSpaceMatrix * model);
-        //solidShader.SetUniformMat4f("uMVP", projection* view* model);
+        depthMap.Bind();
+        depthMap.SetUniformMat4f("uMVP", lightSpaceMatrix * model);
 
-        plane.Draw(solidShader);
+        plane.Draw(depthMap);
 
         model = glm::mat4(1);
         model = glm::translate(model, glm::vec3(0.0f, 1.5f, 0.0f));
         model = glm::scale(model, glm::vec3(0.5f));
 
-        solidShader.Bind();
-        solidShader.SetUniformMat4f("uMVP", lightSpaceMatrix * model);
-        //solidShader.SetUniformMat4f("uMVP", projection* view* model);
-        solidShader.SetUniform1i("uMaterial.texture_diffuse1", 0);
+        depthMap.Bind();
+        depthMap.SetUniformMat4f("uMVP", lightSpaceMatrix * model);
 
-        cube.Draw(solidShader);
+        cube.Draw(depthMap);
 
         model = glm::mat4(1);
         model = glm::translate(model, glm::vec3(2.0f, 0.0f, 1.0f));
         model = glm::scale(model, glm::vec3(0.5f));
 
-        solidShader.Bind();
-        solidShader.SetUniformMat4f("uMVP", lightSpaceMatrix * model);
-        //solidShader.SetUniformMat4f("uMVP", projection* view* model);
-        solidShader.SetUniform1i("uMaterial.texture_diffuse1", 0);
+        depthMap.Bind();
+        depthMap.SetUniformMat4f("uMVP", lightSpaceMatrix * model);
 
-        cube.Draw(solidShader);
+        cube.Draw(depthMap);
 
         model = glm::mat4(1);
         model = glm::translate(model, glm::vec3(-1.0f, 0.0f, 2.0f));
         model = glm::rotate(model, glm::radians(60.0f), glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f)));
         model = glm::scale(model, glm::vec3(0.25f));
 
-        solidShader.Bind();
-        solidShader.SetUniformMat4f("uMVP", lightSpaceMatrix * model);
-        //solidShader.SetUniformMat4f("uMVP", projection * view * model);
-        solidShader.SetUniform1i("uMaterial.texture_diffuse1", 0);
+        depthMap.Bind();
+        depthMap.SetUniformMat4f("uMVP", lightSpaceMatrix * model);
 
-        cube.Draw(solidShader);
+        cube.Draw(depthMap);
         
         dMap.Unbind();
 
         Window::SetViewport(0, 0, Window::GetWidth(), Window::GetHeight());
         Window::Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        dMap.Draw(depthMapShader);
+        /*render scene using depth map as a shadow map*/
+
+        dMap.BindTex(1);
+
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
+
+        sceneWShadowMap.Bind();
+        sceneWShadowMap.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
+        sceneWShadowMap.SetUniformMat4f("uMVP", projection * view * model);
+        sceneWShadowMap.SetUniformMat4f("uModel", model);
+        sceneWShadowMap.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
+        sceneWShadowMap.SetUniformMat4f("uLightSpaceMatrix", lightSpaceMatrix);
+
+        plane.Draw(sceneWShadowMap);
+
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(0.0f, 1.5f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.5f));
+
+        sceneWShadowMap.Bind();
+        sceneWShadowMap.SetUniformMat4f("uMVP", projection * view * model);
+        sceneWShadowMap.SetUniformMat4f("uModel", model);
+        sceneWShadowMap.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
+        sceneWShadowMap.SetUniformMat4f("uLightSpaceMatrix", lightSpaceMatrix);
+
+        cube.Draw(sceneWShadowMap);
+
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(2.0f, 0.0f, 1.0f));
+        model = glm::scale(model, glm::vec3(0.5f));
+
+        sceneWShadowMap.Bind();
+        sceneWShadowMap.SetUniformMat4f("uMVP", projection * view * model);
+        sceneWShadowMap.SetUniformMat4f("uModel", model);
+        sceneWShadowMap.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
+        sceneWShadowMap.SetUniformMat4f("uLightSpaceMatrix", lightSpaceMatrix);
+
+        cube.Draw(sceneWShadowMap);
+
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(-1.0f, 0.0f, 2.0f));
+        model = glm::rotate(model, glm::radians(60.0f), glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f)));
+        model = glm::scale(model, glm::vec3(0.25f));
+
+        sceneWShadowMap.Bind();
+        sceneWShadowMap.SetUniformMat4f("uMVP", projection * view * model);
+        sceneWShadowMap.SetUniformMat4f("uModel", model);
+        sceneWShadowMap.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
+        sceneWShadowMap.SetUniformMat4f("uLightSpaceMatrix", lightSpaceMatrix);
+
+        cube.Draw(sceneWShadowMap);
+
+        /*optionally render depth map to the screen for visual debug*/
+
+        //dMap.Draw(depthMapVisualDebug, 1);
         
         Window::SwapBuffers();
         Window::PollEvents();

@@ -47,8 +47,11 @@ namespace feng {
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+			float bColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+			glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, bColor);
 
 			glBindFramebuffer(GL_FRAMEBUFFER, m_DepthMapFBO);
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_DepthMapTexture, 0);
@@ -62,15 +65,21 @@ namespace feng {
 			glBindFramebuffer(GL_FRAMEBUFFER, m_DepthMapFBO);
 		}
 
+		void BindTex(uint32_t texture_unit = 0)
+		{
+			glActiveTexture(GL_TEXTURE0 + texture_unit);
+			glBindTexture(GL_TEXTURE_2D, m_DepthMapTexture);
+		}
+
 		void Unbind()
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 
-		void Draw(Shader& shader)
+		void Draw(Shader& shader, uint32_t texture_unit = 0)
 		{
 			shader.Bind();
-			glActiveTexture(GL_TEXTURE0);
+			glActiveTexture(GL_TEXTURE0 + texture_unit);
 			glBindTexture(GL_TEXTURE_2D, m_DepthMapTexture);
 			glBindVertexArray(m_QuadVAO);
 			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
