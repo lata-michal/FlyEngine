@@ -1821,7 +1821,7 @@ bool Scene::RenderScene10(HWND hText)
 
     Mesh plane(planeVertices, planeIndices, planeVecTexture, planeVerticesLayout);
 
-    DepthMap dMap(1024, 1024);
+    DepthMap dMap(2048, 2048);
 
     float nearPlane = 1.0f;
     float farPlane = 7.5f;
@@ -1862,7 +1862,7 @@ bool Scene::RenderScene10(HWND hText)
         dMap.Bind();
         Window::SetViewport(0, 0, dMap.GetTexWidth(), dMap.GetTexHeight());
         Window::Clear(GL_DEPTH_BUFFER_BIT);
-        
+
         /*render scene from light perspective for depth map*/
 
         model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
