@@ -296,7 +296,7 @@ bool Scene::RenderScene1(HWND hText)
             shaderBackpack.Bind();
             shaderBackpack.SetUniformMat4f("uMVP", projection * view * model);
             shaderBackpack.SetUniformMat4f("uModel", model);
-            shaderBackpack.SetUniformMat3f("uTranInvModel", glm::mat3(glm::transpose(glm::inverse(model))));
+            shaderBackpack.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
             shaderBackpack.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
             shaderBackpack.SetUniform3f("uDirLight.direction", 0.0f, -1.0f, -0.3f);
             shaderBackpack.SetUniformVec3f("uDirLight.ambient", ambientDirlightColor);
@@ -316,7 +316,7 @@ bool Scene::RenderScene1(HWND hText)
             shaderBackpackNormals.Bind();
             shaderBackpackNormals.SetUniformMat4f("uModel", model);
             shaderBackpackNormals.SetUniformMat4f("uView", view);
-            shaderBackpackNormals.SetUniformMat3f("uTranInvModel", glm::mat3(glm::transpose(glm::inverse(model))));
+            shaderBackpackNormals.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
             shaderBackpackNormals.SetUniformMat4f("uProjection", projection);
 
             modelBackpack.Draw(shaderBackpackNormals);
@@ -328,7 +328,7 @@ bool Scene::RenderScene1(HWND hText)
             shaderBackpackExplosion.Bind();
             shaderBackpackExplosion.SetUniformMat4f("uMVP", projection * view * model);
             shaderBackpackExplosion.SetUniformMat4f("uModel", model);
-            shaderBackpackExplosion.SetUniformMat3f("uTranInvModel", glm::mat3(glm::transpose(glm::inverse(model))));
+            shaderBackpackExplosion.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
 
             if ((camera.GetCameraPosition().x > -9.0f && camera.GetCameraPosition().x < 3.0f)
                 && (camera.GetCameraPosition().y > 0.0f && camera.GetCameraPosition().y < 2.5f)
@@ -339,7 +339,7 @@ bool Scene::RenderScene1(HWND hText)
 
             shaderBackpackExplosion.SetUniformMat4f("uMVP", projection * view * model);
             shaderBackpackExplosion.SetUniformMat4f("uModel", model);
-            shaderBackpackExplosion.SetUniformMat3f("uTranInvModel", glm::mat3(glm::transpose(glm::inverse(model))));
+            shaderBackpackExplosion.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
             shaderBackpackExplosion.SetUniform1f("uTime", static_cast<float>(glfwGetTime()));
             shaderBackpackExplosion.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
             shaderBackpackExplosion.SetUniform3f("uDirLight.direction", 0.0f, -1.0f, -0.3f);
@@ -364,7 +364,7 @@ bool Scene::RenderScene1(HWND hText)
             shaderRefraction.Bind();
             shaderRefraction.SetUniformMat4f("uMVP", projection * view * model);
             shaderRefraction.SetUniformMat4f("uModel", model);
-            shaderRefraction.SetUniformMat3f("uTranInvModel", glm::mat3(glm::transpose(glm::inverse(model))));
+            shaderRefraction.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
             shaderRefraction.SetUniform1i("uSkybox", 0);
             shaderRefraction.SetUniformVec3f("uCameraPos", camera.GetCameraPosition());
 
@@ -377,7 +377,7 @@ bool Scene::RenderScene1(HWND hText)
             shaderFlower.Bind();
             shaderFlower.SetUniformMat4f("uMVP", projection * view * model);
             shaderFlower.SetUniformMat4f("uModel", model);
-            shaderFlower.SetUniformMat3f("uTranInvModel", glm::mat3(glm::transpose(glm::inverse(model))));
+            shaderFlower.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
             shaderFlower.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
             shaderFlower.SetUniform3f("uDirLight.direction", -0.2f, -1.0f, -0.3f);
             shaderFlower.SetUniformVec3f("uDirLight.ambient", ambientDirlightColor);
@@ -403,7 +403,7 @@ bool Scene::RenderScene1(HWND hText)
             shaderFlower.Bind();
             shaderFlower.SetUniformMat4f("uMVP", projection * view * model);
             shaderFlower.SetUniformMat4f("uModel", model);
-            shaderFlower.SetUniformMat3f("uTranInvModel", glm::mat3(glm::transpose(glm::inverse(model))));
+            shaderFlower.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
 
             Window::DisableFaceCulling();
             modelFlowers.Draw(shaderFlower);
@@ -429,7 +429,7 @@ bool Scene::RenderScene1(HWND hText)
 
             shaderReflection.Bind();
             shaderReflection.SetUniformMat4f("uMVP", projection * view * model);
-            shaderReflection.SetUniformMat3f("uTranInvModel", glm::mat3(glm::transpose(glm::inverse(model))));
+            shaderReflection.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
             shaderReflection.SetUniformMat4f("uModel", model);
             shaderReflection.SetUniform1i("uSkybox", 0);
             shaderReflection.SetUniformVec3f("uCameraPos", camera.GetCameraPosition());
@@ -502,7 +502,7 @@ bool Scene::RenderScene1(HWND hText)
             shaderBackpack.Bind();
             shaderBackpack.SetUniformMat4f("uMVP", projection * view * model);
             shaderBackpack.SetUniformMat4f("uModel", model);
-            shaderBackpack.SetUniformMat3f("uTranInvModel", glm::mat3(glm::transpose(glm::inverse(model))));
+            shaderBackpack.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
             shaderBackpack.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
             shaderBackpack.SetUniform3f("uDirLight.direction", 0.0f, -1.0f, -0.3f);
             shaderBackpack.SetUniformVec3f("uDirLight.ambient", ambientDirlightColor);
@@ -522,7 +522,7 @@ bool Scene::RenderScene1(HWND hText)
             shaderBackpackNormals.Bind();
             shaderBackpackNormals.SetUniformMat4f("uModel", model);
             shaderBackpackNormals.SetUniformMat4f("uView", view);
-            shaderBackpackNormals.SetUniformMat3f("uTranInvModel", glm::mat3(glm::transpose(glm::inverse(model))));
+            shaderBackpackNormals.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
             shaderBackpackNormals.SetUniformMat4f("uProjection", projection);
 
             modelBackpack.Draw(shaderBackpackNormals);
@@ -534,10 +534,10 @@ bool Scene::RenderScene1(HWND hText)
             shaderBackpackExplosion.Bind();
             shaderBackpackExplosion.SetUniformMat4f("uMVP", projection * view * model);
             shaderBackpackExplosion.SetUniformMat4f("uModel", model);
-            shaderBackpackExplosion.SetUniformMat3f("uTranInvModel", glm::mat3(glm::transpose(glm::inverse(model))));
+            shaderBackpackExplosion.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
             shaderBackpackExplosion.SetUniformMat4f("uMVP", projection* view* model);
             shaderBackpackExplosion.SetUniformMat4f("uModel", model);
-            shaderBackpackExplosion.SetUniformMat3f("uTranInvModel", glm::mat3(glm::transpose(glm::inverse(model))));
+            shaderBackpackExplosion.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
             shaderBackpackExplosion.SetUniform1f("uTime", static_cast<float>(glfwGetTime()));
             shaderBackpackExplosion.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
             shaderBackpackExplosion.SetUniform3f("uDirLight.direction", 0.0f, -1.0f, -0.3f);
@@ -562,7 +562,7 @@ bool Scene::RenderScene1(HWND hText)
             shaderRefraction.Bind();
             shaderRefraction.SetUniformMat4f("uMVP", projection* view* model);
             shaderRefraction.SetUniformMat4f("uModel", model);
-            shaderRefraction.SetUniformMat3f("uTranInvModel", glm::mat3(glm::transpose(glm::inverse(model))));
+            shaderRefraction.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
             shaderRefraction.SetUniform1i("uSkybox", 0);
             shaderRefraction.SetUniformVec3f("uCameraPos", camera.GetCameraPosition());
 
@@ -575,7 +575,7 @@ bool Scene::RenderScene1(HWND hText)
             shaderFlower.Bind();
             shaderFlower.SetUniformMat4f("uMVP", projection * view * model);
             shaderFlower.SetUniformMat4f("uModel", model);
-            shaderFlower.SetUniformMat3f("uTranInvModel", glm::mat3(glm::transpose(glm::inverse(model))));
+            shaderFlower.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
             shaderFlower.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
             shaderFlower.SetUniform3f("uDirLight.direction", -0.2f, -1.0f, -0.3f);
             shaderFlower.SetUniformVec3f("uDirLight.ambient", ambientDirlightColor);
@@ -601,7 +601,7 @@ bool Scene::RenderScene1(HWND hText)
             shaderFlower.Bind();
             shaderFlower.SetUniformMat4f("uMVP", projection* view* model);
             shaderFlower.SetUniformMat4f("uModel", model);
-            shaderFlower.SetUniformMat3f("uTranInvModel", glm::mat3(glm::transpose(glm::inverse(model))));
+            shaderFlower.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
 
             Window::DisableFaceCulling();
             modelFlowers.Draw(shaderFlower);
@@ -627,7 +627,7 @@ bool Scene::RenderScene1(HWND hText)
 
             shaderReflection.Bind();
             shaderReflection.SetUniformMat4f("uMVP", projection * view* model);
-            shaderReflection.SetUniformMat3f("uTranInvModel", glm::mat3(glm::transpose(glm::inverse(model))));
+            shaderReflection.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
             shaderReflection.SetUniformMat4f("uModel", model);
             shaderReflection.SetUniform1i("uSkybox", 0);
             shaderReflection.SetUniformVec3f("uCameraPos", camera.GetCameraPosition());
@@ -1038,7 +1038,7 @@ bool Scene::RenderScene4(HWND hText)
         shader.Bind();
         shader.SetUniformMat4f("uMVP", projection * view * model);
         shader.SetUniformMat4f("uModel", model);
-        shader.SetUniformMat3f("uTranInvModel", glm::mat3(glm::transpose(glm::inverse(model))));
+        shader.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
         shader.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
         shader.SetUniform3f("uDirLight.direction", -0.2f, 0.1f, -1.0f);
         shader.SetUniformVec3f("uDirLight.ambient", ambientDirlightColor);
@@ -1082,7 +1082,7 @@ bool Scene::RenderScene4(HWND hText)
         shaderFloor.Bind();
         shaderFloor.SetUniformMat4f("uMVP", projection * view * model);
         shaderFloor.SetUniformMat4f("uModel", model);
-        shaderFloor.SetUniformMat3f("uTranInvModel", glm::mat3(glm::transpose(glm::inverse(model))));
+        shaderFloor.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
         shaderFloor.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
         shaderFloor.SetUniform3f("uDirLight.direction", -0.2f, 0.1f, -1.0f);
         shaderFloor.SetUniformVec3f("uDirLight.ambient", ambientDirlightColor);
@@ -1222,7 +1222,7 @@ bool Scene::RenderScene5(HWND hText)
         shaderPlane.Bind();
         shaderPlane.SetUniformMat4f("uMVP", projection * view * model);
         shaderPlane.SetUniformMat4f("uModel", model);
-        shaderPlane.SetUniformMat3f("uTranInvModel", glm::mat3(glm::transpose(glm::inverse(model))));
+        shaderPlane.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
         shaderPlane.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
         shaderPlane.SetUniform3f("uDirLight.direction", -0.2f, 0.1f, -1.0f);
         shaderPlane.SetUniformVec3f("uDirLight.ambient", ambientDirlightColor);
@@ -1564,7 +1564,7 @@ bool Scene::RenderScene8(HWND hText)
         shaderTitan.Bind();
         shaderTitan.SetUniformMat4f("uMVP", projection * view * model);
         shaderTitan.SetUniformMat4f("uModel", model);
-        shaderTitan.SetUniformMat3f("uTranInvModel", glm::mat3(glm::transpose(glm::inverse(model))));
+        shaderTitan.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
         shaderTitan.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
         shaderTitan.SetUniform3f("uDirLight.direction", 0.2f, 1.0f, 0.1f);
         shaderTitan.SetUniformVec3f("uDirLight.ambient", ambientDirlightColor);
@@ -1824,7 +1824,13 @@ bool Scene::RenderScene10(HWND hText)
     DepthMap dMap(2048, 2048);
 
     float nearPlane = 1.0f;
-    float farPlane = 7.5f;
+    float farPlane = 6.0f;
+
+    float beta = 10.0f;
+    float phase = 0.0f;
+    float direction = 1.0f;
+    bool directionChange1 = true;
+    bool directionChange2 = false;
 
     glm::vec3 lightPos(-2.0f, 4.0f, -1.0f);
 
@@ -1834,7 +1840,7 @@ bool Scene::RenderScene10(HWND hText)
     Shader sceneWShadowMap(fileSys.GetExecutableDirPath() + "\\res\\shaders\\scenewshadows.shader");
     sceneWShadowMap.SetUniform1i("uDepthMap", 1);
     sceneWShadowMap.SetUniform1f("uMaterial.shininess", 64.0f);
-    sceneWShadowMap.SetUniformVec3f("uLightPos", lightPos);
+    Shader sunCube(fileSys.GetExecutableDirPath() + "\\res\\shaders\\minsun.shader");
 
     Window::EnableFaceCulling();
     Window::SetCCWFaceCulling();
@@ -1849,13 +1855,13 @@ bool Scene::RenderScene10(HWND hText)
         Window::SetDeltaTime(timer.GetDeltaTime());
         Window::SetWindowTitle("FlyEngine : -)    FPS: " + timer.GetStringFPS());
 
-        Window::Clear(0.0f, 0.0f, 0.0f, 1.0f, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        Window::Clear(0.01f, 0.01f, 0.01f, 1.0f, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
+        glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, (5.52f - lightPos.y) * farPlane);
         glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         glm::mat4 lightSpaceMatrix = lightProjection * lightView;
 
-        glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), static_cast<float>(Window::GetWidth()) / static_cast<float>(Window::GetHeight()), 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), static_cast<float>(Window::GetWidth()) / static_cast<float>(Window::GetHeight()), 0.1f, 200.0f);
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 model = glm::mat4(1);
         
@@ -1913,6 +1919,7 @@ bool Scene::RenderScene10(HWND hText)
         model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
 
         sceneWShadowMap.Bind();
+        sceneWShadowMap.SetUniformVec3f("uLightPos", lightPos);
         sceneWShadowMap.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
         sceneWShadowMap.SetUniformMat4f("uMVP", projection * view * model);
         sceneWShadowMap.SetUniformMat4f("uModel", model);
@@ -1957,6 +1964,44 @@ bool Scene::RenderScene10(HWND hText)
         sceneWShadowMap.SetUniformMat4f("uLightSpaceMatrix", lightSpaceMatrix);
 
         cube.Draw(sceneWShadowMap);
+
+        /*render minecraft like sun xd*/
+
+        beta += timer.GetDeltaTime() * 0.1;
+
+        if (beta > glm::radians(0.0f) && beta < glm::radians(180.0f))
+        {
+            phase = 0.0f;
+        }
+        else
+        {
+            phase = glm::radians(180.0f);
+        }
+
+        if (lightPos.y <= -5.0f && directionChange1)
+        {
+            direction *= -1.0f;
+            directionChange1 = false;
+            directionChange2 = true;
+        }
+        if (lightPos.y >= 4.525f && directionChange2)
+        {
+            direction *= -1.0f;
+            directionChange1 = true;
+            directionChange2 = false;
+        }
+
+        lightPos.x = 5.025f * direction * static_cast<float>(sin(beta + phase)) * static_cast<float>(cos(beta));
+        lightPos.z = 5.025f * direction * static_cast<float>(sin(beta + phase)) * static_cast<float>(sin(beta));
+        lightPos.y = 5.025f * static_cast<float>(cos(beta + phase)) - 0.5f;
+
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::normalize(lightPos) * 100.0f);
+        model = glm::scale(model, glm::vec3(10.0f));
+
+        sunCube.Bind();
+        sunCube.SetUniformMat4f("uMVP", projection * view * model);
+        cube.Draw(sunCube);
 
         /*optionally render depth map to the screen for visual debug*/
 
