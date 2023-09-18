@@ -217,7 +217,7 @@ bool Scene::RenderScene1(HWND hText)
         fileSys.GetExecutableDirPath() + "\\res\\textures\\skybox\\back.jpg"
     };
 
-    CubeMap skybox(skyboxTextures);
+    Skybox skybox(skyboxTextures);
 
     glm::vec3 ambientDirlightColor(0.2f, 0.2f, 0.2f);
     glm::vec3 diffuseDirlightColor(0.5f, 0.5f, 0.5f);
@@ -982,7 +982,7 @@ bool Scene::RenderScene4(HWND hText)
     fileSys.GetExecutableDirPath() + "\\res\\textures\\skybox2\\nz.png"
     };
 
-    CubeMap skybox(skyboxTextures);
+    Skybox skybox(skyboxTextures);
 
     Shader shader(fileSys.GetExecutableDirPath() + "\\res\\shaders\\cubespecular.shader");
     shader.SetUniform1f("uMaterial.shininess", 64.0f);
@@ -1164,7 +1164,7 @@ bool Scene::RenderScene5(HWND hText)
         fileSys.GetExecutableDirPath() + "\\res\\textures\\skybox2\\nz.png"
     };
 
-    CubeMap skybox(skyboxTextures);
+    Skybox skybox(skyboxTextures);
 
     Model modelPlane(fileSys.GetExecutableDirPath() + "\\res\\models\\plane\\raf_voyager_aeroplane_private_plane\\plane.obj", false);
     modelPlane.Load();
@@ -1373,7 +1373,7 @@ bool Scene::RenderScene7(HWND hText)
         fileSys.GetExecutableDirPath() + "\\res\\textures\\skybox3\\back.png"
     };
 
-    CubeMap skybox(skyboxTextures);
+    Skybox skybox(skyboxTextures);
 
     uint32_t amount = 20000;
 

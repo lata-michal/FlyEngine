@@ -5,14 +5,14 @@
 
 namespace feng {
 
-    class CubeMap
+    class Skybox
     {
     private:
         uint32_t m_TextureID;
         VAO m_VAO;
         VBO m_VBO;
     public:
-        CubeMap(const std::vector<std::string>& faces)
+        Skybox(const std::vector<std::string>& faces)
             : m_VAO(), m_VBO({ -1.0f,  1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f,
                       -1.0f, -1.0f,  1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  1.0f,  1.0f, -1.0f, -1.0f, 1.0f,
                        1.0f, -1.0f, -1.0f, 1.0f, -1.0f,  1.0f,1.0f,  1.0f,  1.0f, 1.0f,  1.0f,  1.0f,1.0f,  1.0f, -1.0f, 1.0f, -1.0f, -1.0f,
