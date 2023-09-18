@@ -35,6 +35,7 @@ namespace feng {
         static void WindowProcessInput(Actions& action);
         static bool WindowShouldClose();
 
+        static void Clear(uint32_t mask);
         static void Clear(float r, float g, float b, float a, uint32_t mask);
         static void SwapBuffers();
         static void PollEvents();
@@ -51,6 +52,7 @@ namespace feng {
         static void SetDeltaTime(float deltaTime) { m_DeltaTime = deltaTime; }
         static void SetWindowShouldClose();
         static void SetFullscreen(bool fullscreen);
+        static void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) { glViewport(x, y, width, height); }
 
         static void EnableFaceCulling() { glEnable(GL_CULL_FACE); }
         static void SetCWFaceCulling() { glFrontFace(GL_CW); }

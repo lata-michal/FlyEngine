@@ -108,7 +108,7 @@ vec3 calcDirLight(DirLight light, vec3 normal, vec3 viewDir)
     vec3 ambient = light.ambient * vec3(texture(uMaterial.texture_diffuse1, oTexCoord));
 
     vec3 diffuse = light.diffuse * calcDiff(normal, lightDir) * vec3(texture(uMaterial.texture_diffuse1, oTexCoord));
-
+    
     vec3 specular = light.specular * calcSpec(normal, lightDir, viewDir) * vec3(texture(uMaterial.texture_specular1, oTexCoord));
 
     return (ambient + diffuse + specular);
@@ -169,6 +169,7 @@ float calcDiff(vec3 normal, vec3 lightDir)
 
 float calcSpec(vec3 normal, vec3 lightDir, vec3 viewDir)
 {
-    vec3 reflectDir = reflect(-lightDir, normal);
-    return pow(max(dot(viewDir, reflectDir), 0.0), uMaterial.shininess);
+    //vec3 reflectDir = reflect(-lightDir, normal);
+    vec3 halfwayDir = normalize(lightDir + viewDir);
+    return pow(max(dot(normal, halfwayDir), 0.0), uMaterial.shininess);
 }

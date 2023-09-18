@@ -5,13 +5,20 @@ layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
 layout(location = 2) in vec2 texCoord;
 
-out vec2 oTexCoord;
+out VS_OUT
+{
+    vec3 fragPos;
+    vec3 normal;
+    vec2 texCoord;
+} vs_out;
 
 uniform mat4 uMVP;
 
 void main()
 {
-    oTexCoord = texCoord;
+    vs_out.fragPos = position;
+    vs_out.normal = normal;
+    vs_out.texCoord = texCoord;
     gl_Position = uMVP * vec4(position, 1.0);
 }
 
@@ -20,7 +27,12 @@ void main()
 
 out vec4 fragmentColor;
 
-in vec2 oTexCoord;
+in VS_OUT
+{
+    vec3 fragPos;
+    vec3 normal;
+    vec2 texCoord;
+} vs_in;
 
 struct Material
 {
@@ -31,7 +43,5 @@ uniform Material uMaterial;
 
 void main()
 {
-    fragmentColor = texture(uMaterial.texture_diffuse1, oTexCoord) * vec4(0.5);
+    fragmentColor = texture(uMaterial.texture_diffuse1, vs_in.texCoord);
 }
-
-

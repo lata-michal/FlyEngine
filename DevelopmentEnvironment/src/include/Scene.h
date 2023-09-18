@@ -6,7 +6,8 @@
 #include "Camera.h"
 #include "FrameBuffer.h"
 #include "UniformBuffer.h"
-#include "CubeMap.h"
+#include "DepthMap.h"
+#include "Skybox.h"
 
 #include "Log.h"
 

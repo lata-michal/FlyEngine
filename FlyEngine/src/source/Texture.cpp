@@ -20,22 +20,30 @@ Texture::Texture(const std::string& path, const std::string& type, int32_t wrap_
 	m_LocalBuffer = stbi_load(path.c_str(), &m_Width, &m_Height, &m_NrChannels, 0);
 
 	int32_t external_format = -1;
+	int32_t internal_format = GL_RGBA8;
+
 	if (m_NrChannels == 1)
 	{
 		external_format = GL_RED;
 	}
 	else if (m_NrChannels == 3)
 	{
+		if(type != "texture_specular")
+			internal_format = GL_SRGB;
+
 		external_format = GL_RGB;
 	}
 	else if (m_NrChannels == 4)
 	{
+		if(type != "texture_specular")
+			internal_format = GL_SRGB_ALPHA;
+
 		external_format = GL_RGBA;
 	}
 
 	if (m_LocalBuffer)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Width, m_Height, 0, external_format, GL_UNSIGNED_BYTE, m_LocalBuffer);
+		glTexImage2D(GL_TEXTURE_2D, 0, internal_format, m_Width, m_Height, 0, external_format, GL_UNSIGNED_BYTE, m_LocalBuffer);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}

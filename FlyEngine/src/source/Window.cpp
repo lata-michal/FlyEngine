@@ -90,6 +90,7 @@ void Window::Initialize(int32_t width, int32_t height, const char* title, bool f
             glViewport(0, 0, m_Width, m_Height);
             glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_LESS);
+            glEnable(GL_FRAMEBUFFER_SRGB);
 
             if (fullscreen)
                 SetFullscreen(true);
@@ -221,6 +222,11 @@ void Window::WindowProcessInput(Actions& actionObject)
 bool Window::WindowShouldClose()
 {
     return glfwWindowShouldClose(m_Window.get());
+}
+
+void feng::Window::Clear(uint32_t mask)
+{
+    glClear(mask);
 }
 
 void Window::Clear(float r, float g, float b, float a, uint32_t mask)
