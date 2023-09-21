@@ -7,6 +7,7 @@
 #include "FrameBuffer.h"
 #include "UniformBuffer.h"
 #include "DepthMap.h"
+#include "DepthMapEx.h"
 #include "Skybox.h"
 
 #include "Log.h"

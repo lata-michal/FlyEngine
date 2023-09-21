@@ -17,9 +17,10 @@ namespace feng {
         std::vector<Texture> m_Textures;
     public:
         Mesh(const std::vector<float>& vertices, VertexLayout& layout);
+        Mesh(const std::vector<float>& vertices, const std::vector<Texture>& textures, VertexLayout& layout);
         Mesh(const std::vector<float>& vertices, const std::vector<uint32_t>& indices, VertexLayout& layout);
-        Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::vector<Texture>& textures, const std::vector<float>& instanceMatrix = {});
         Mesh(const std::vector<float>& vertices, const std::vector<uint32_t>& indices, const std::vector<Texture>& textures, VertexLayout& layout);
+        Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::vector<Texture>& textures, const std::vector<float>& instanceMatrix = {});
 
         void Draw(Shader& shader, uint32_t instanceCount = 1);
 

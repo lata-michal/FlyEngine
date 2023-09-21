@@ -60,7 +60,7 @@ namespace feng {
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 
-		void Bind()
+		void Bind() 
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, m_DepthMapFBO);
 		}
