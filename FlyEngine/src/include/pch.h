@@ -17,6 +17,7 @@
 #include <unordered_set>
 #include <set>
 #include <cstdlib>
+#include <array>
 
 //GLAD
 #include <GLAD\glad.h>

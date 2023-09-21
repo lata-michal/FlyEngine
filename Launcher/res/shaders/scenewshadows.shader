@@ -86,7 +86,7 @@ void main()
     vec3 normal = normalize(vs_in.oNormal);
     vec3 lightColor = vec3(1.0);
 
-    vec3 ambient = 0.15 * lightColor;
+    vec3 ambient = 0.3 * color;
 
     vec3 lightDir = normalize(uLightPos - vs_in.oFragPos);
     float diff = max(dot(lightDir, normal), 0.0);

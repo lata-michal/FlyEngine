@@ -1748,7 +1748,7 @@ bool Scene::RenderScene10(HWND hText)
     camera.AddScrollBinding(0, ScrollActions::ZOOM);
 
     std::vector<float> cubeVertices = {
-        // back face
+            // back face        
             -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
              1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
              1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f, // bottom-right         
@@ -1797,7 +1797,10 @@ bool Scene::RenderScene10(HWND hText)
     cubeVerticesLayout.AddVec3(1);
     cubeVerticesLayout.AddVec2(2);
 
-    Mesh cube(cubeVertices, cubeVerticesLayout);
+    Texture planeTexture(fileSys.GetExecutableDirPath() + "\\res\\textures\\wood.png", "texture_diffuse", GL_REPEAT);
+    std::vector<Texture> planeVecTexture = { planeTexture };
+
+    Mesh cube(cubeVertices, planeVecTexture, cubeVerticesLayout);
 
     std::vector<float> planeVertices = {
         -25.0f, 0.0f, -25.0f, 0.0f, 1.0f, 0.0f, 0.0f, 25.0f,
@@ -1816,9 +1819,6 @@ bool Scene::RenderScene10(HWND hText)
         0, 2, 3
     };
 
-    Texture planeTexture(fileSys.GetExecutableDirPath() + "\\res\\textures\\wood.png", "texture_diffuse", GL_REPEAT);
-    std::vector<Texture> planeVecTexture = { planeTexture };
-
     Mesh plane(planeVertices, planeIndices, planeVecTexture, planeVerticesLayout);
 
     DepthMap dMap(2048, 2048);
@@ -1826,6 +1826,7 @@ bool Scene::RenderScene10(HWND hText)
     float nearPlane = 1.0f;
     float farPlane = 6.0f;
 
+    float velocity = 0.1f;
     float beta = 10.0f;
     float phase = 0.0f;
     float direction = 1.0f;
@@ -1967,7 +1968,7 @@ bool Scene::RenderScene10(HWND hText)
 
         /*render minecraft like sun xd*/
 
-        beta += timer.GetDeltaTime() * 0.1;
+        beta += timer.GetDeltaTime() * velocity;
 
         if (beta > glm::radians(0.0f) && beta < glm::radians(180.0f))
         {
@@ -1989,6 +1990,14 @@ bool Scene::RenderScene10(HWND hText)
             direction *= -1.0f;
             directionChange1 = true;
             directionChange2 = false;
+        }
+        if (lightPos.y < -1.0f)
+        {
+            velocity = 2.0f;
+        }
+        else
+        {
+            velocity = 0.1f;
         }
 
         lightPos.x = 5.025f * direction * static_cast<float>(sin(beta + phase)) * static_cast<float>(cos(beta));
@@ -2021,7 +2030,279 @@ bool Scene::RenderScene11(HWND hText)
 {
     using namespace feng;
 
+    m_ForcedEnd = false;
+    Log::SetHandleTextBox(hText);
+
+    Window::Initialize(1600, 1100, "FlyEngine :-)", false, 4, 3, GLFW_OPENGL_CORE_PROFILE, true, 0.03f);
+
+    if (!Window::ValidateWindow())
+        return false;
+
+    FileSystem fileSys;
+
+    Timer timer;
+
+    Camera camera(0.0f, 0.0f, 3.0f);
+
+    camera.AddKeyBinding(GLFW_KEY_ESCAPE, KeyActions::EXIT);
+    camera.AddKeyBinding(GLFW_KEY_W, KeyActions::FORWARD);
+    camera.AddKeyBinding(GLFW_KEY_A, KeyActions::LEFT);
+    camera.AddKeyBinding(GLFW_KEY_S, KeyActions::BACKWARD);
+    camera.AddKeyBinding(GLFW_KEY_D, KeyActions::RIGHT);
+    camera.AddKeyBinding(GLFW_KEY_F11, KeyActions::FULLSCREEN);
+    camera.AddMouseBinding(0, MouseActions::LOOKAROUND);
+    camera.AddScrollBinding(0, ScrollActions::ZOOM);
+
+    std::vector<float> cubeVertices = {
+        // back face        
+        -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+         1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+         1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f, // bottom-right         
+         1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+        -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+        -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f, // top-left
+        // front face
+        -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+         1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 0.0f, // bottom-right
+         1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+         1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+        -1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 1.0f, // top-left
+        -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+        // left face
+        -1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+        -1.0f,  1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-left
+        -1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+        -1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+        -1.0f, -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+        -1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+        // right face
+         1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+         1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+         1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-right         
+         1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+         1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+         1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-left     
+         // bottom face
+         -1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+          1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f, // top-left
+          1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+          1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+         -1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+         -1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+         // top face
+         -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+          1.0f,  1.0f , 1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+          1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f, // top-right     
+          1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+         -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+         -1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f  // bottom-left        
+    };
+
+    VertexLayout cubeVerticesLayout;
+    cubeVerticesLayout.AddVec3(0);
+    cubeVerticesLayout.AddVec3(1);
+    cubeVerticesLayout.AddVec2(2);
+
+    Texture planeTexture(fileSys.GetExecutableDirPath() + "\\res\\textures\\wood.png", "texture_diffuse", GL_REPEAT);
+    std::vector<Texture> planeVecTexture = { planeTexture };
+
+    Mesh cube(cubeVertices, planeVecTexture, cubeVerticesLayout);
+
+    float nearPlaneSM = 1.0f;
+    float farPlaneSM = 25.0f;
+
+    glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
+    std::array<glm::mat4, 6> shadowTransform;
+
+    DepthMapEx dCubeMap(1024, 1024);
+
+    Shader sceneWShadowMap(fileSys.GetExecutableDirPath() + "\\res\\shaders\\sceneshadowedpoint.shader");
+    sceneWShadowMap.SetUniform1f("uMaterial.shininess", 64.0f);
+    sceneWShadowMap.SetUniform1f("uFarPlane", farPlaneSM);
+    sceneWShadowMap.SetUniformVec3f("uLightPos", lightPos);
+    sceneWShadowMap.SetUniform1i("uDepthMap", 1);
+    Shader depthMap(fileSys.GetExecutableDirPath() + "\\res\\shaders\\pointdepthmap.shader");
+    depthMap.SetUniform1f("uFarPlane", farPlaneSM);
+    depthMap.SetUniformVec3f("uLightPos", lightPos);
+    Shader lightCube(fileSys.GetExecutableDirPath() + "\\res\\shaders\\minsun.shader");
+
+    Window::EnableFaceCulling();
+    Window::SetCCWFaceCulling();
+
+    while (!Window::WindowShouldClose() && !m_ForcedEnd)
+    {
+        Window::WindowProcessInput(camera);
+
+        timer.UpdateDelta();
+        timer.UpdateFPS();
+
+        Window::SetDeltaTime(timer.GetDeltaTime());
+        Window::SetWindowTitle("FlyEngine : -)    FPS: " + timer.GetStringFPS());
+
+        Window::Clear(0.0f, 0.0f, 0.0f, 1.0f, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), dCubeMap.GetAspectRatio(), nearPlaneSM, farPlaneSM);
+        shadowTransform[0] = shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+        shadowTransform[1] = shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+        shadowTransform[2] = shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        shadowTransform[3] = shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f));
+        shadowTransform[4] = shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+        shadowTransform[5] = shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+
+        glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), static_cast<float>(Window::GetWidth()) / static_cast<float>(Window::GetHeight()), 0.1f, 100.0f);
+        glm::mat4 view = camera.GetViewMatrix();
+        glm::mat4 model = glm::mat4(1);
+        
+        Window::SetViewport(0, 0, dCubeMap.GetTexWidth(), dCubeMap.GetTexHeight());
+        dCubeMap.Bind();
+        Window::Clear(GL_DEPTH_BUFFER_BIT);
+
+        depthMap.Bind();
+        depthMap.SetUniformMat4f("uShadowTransform[0]", shadowTransform[0]);
+        depthMap.SetUniformMat4f("uShadowTransform[1]", shadowTransform[1]);
+        depthMap.SetUniformMat4f("uShadowTransform[2]", shadowTransform[2]);
+        depthMap.SetUniformMat4f("uShadowTransform[3]", shadowTransform[3]);
+        depthMap.SetUniformMat4f("uShadowTransform[4]", shadowTransform[4]);
+        depthMap.SetUniformMat4f("uShadowTransform[5]", shadowTransform[5]);
+
+        model = glm::scale(model, glm::vec3(5.0f));
+
+        depthMap.Bind();
+        depthMap.SetUniformMat4f("uModel", model);
+
+        cube.Draw(depthMap);
+
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(4.0f, -3.5f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.5f));
+
+        depthMap.SetUniformMat4f("uModel", model);
+
+        cube.Draw(depthMap);
+
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(2.0f, 3.0f, 1.0f));
+        model = glm::scale(model, glm::vec3(0.75f));
+
+        depthMap.SetUniformMat4f("uModel", model);
+
+        cube.Draw(depthMap);
+
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(-3.0f, -1.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.5f));
+
+        depthMap.SetUniformMat4f("uModel", model);
+
+        cube.Draw(depthMap);
+
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(-1.5f, 1.0f, 1.5f));
+        model = glm::scale(model, glm::vec3(0.5f));
+
+        depthMap.SetUniformMat4f("uModel", model);
+
+        cube.Draw(depthMap);
+
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(-1.5f, 2.0f, -3.0f));
+        model = glm::rotate(model, glm::radians(60.0f), glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f)));
+        model = glm::scale(model, glm::vec3(0.75f));
+
+        depthMap.SetUniformMat4f("uModel", model);
+
+        cube.Draw(depthMap);
+
+        dCubeMap.Unbind();
+
+        Window::SetViewport(0, 0, Window::GetWidth(), Window::GetHeight());
+        Window::Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        dCubeMap.BindTex(1);
+
+        sceneWShadowMap.Bind();
+        sceneWShadowMap.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
+
+        model = glm::mat4(1);
+        model = glm::scale(model, glm::vec3(5.0f));
+
+        sceneWShadowMap.Bind();
+        sceneWShadowMap.SetUniformMat4f("uMVP", projection * view * model);
+        sceneWShadowMap.SetUniformMat4f("uModel", model);
+        sceneWShadowMap.SetUniformMat3f("uTranInvModel", -glm::transpose(glm::inverse(glm::mat3(model))));
+
+        Window::DisableFaceCulling();
+        cube.Draw(sceneWShadowMap);
+        Window::EnableFaceCulling();
+
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(4.0f, -3.5f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.5f));
+
+        sceneWShadowMap.SetUniformMat4f("uMVP", projection * view * model);
+        sceneWShadowMap.SetUniformMat4f("uModel", model);
+        sceneWShadowMap.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
+
+        cube.Draw(sceneWShadowMap);
+
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(2.0f, 3.0f, 1.0f));
+        model = glm::scale(model, glm::vec3(0.75f));
+
+        sceneWShadowMap.SetUniformMat4f("uMVP", projection * view * model);
+        sceneWShadowMap.SetUniformMat4f("uModel", model);
+        sceneWShadowMap.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
+
+        cube.Draw(sceneWShadowMap);
+
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(-3.0f, -1.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.5f));
+
+        sceneWShadowMap.SetUniformMat4f("uMVP", projection * view * model);
+        sceneWShadowMap.SetUniformMat4f("uModel", model);
+        sceneWShadowMap.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
+
+        cube.Draw(sceneWShadowMap);
+
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(-1.5f, 1.0f, 1.5f));
+        model = glm::scale(model, glm::vec3(0.5f));
+
+        sceneWShadowMap.SetUniformMat4f("uMVP", projection * view * model);
+        sceneWShadowMap.SetUniformMat4f("uModel", model);
+        sceneWShadowMap.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
+
+        cube.Draw(sceneWShadowMap);
+
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(-1.5f, 2.0f, -3.0f));
+        model = glm::rotate(model, glm::radians(60.0f), glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f)));
+        model = glm::scale(model, glm::vec3(0.75f));
+
+        sceneWShadowMap.SetUniformMat4f("uMVP", projection * view * model);
+        sceneWShadowMap.SetUniformMat4f("uModel", model);
+        sceneWShadowMap.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
+
+        cube.Draw(sceneWShadowMap);
+
+        model = glm::mat4(1);
+        model = glm::scale(model, glm::vec3(0.1f));
+
+        lightCube.Bind();
+        lightCube.SetUniformMat4f("uMVP", projection * view * model);
+
+        cube.Draw(lightCube);
+
+        Window::SwapBuffers();
+        Window::PollEvents();
+    }
+
+    Window::Destroy();
+    Window::TerminateGLFW();
+
     return true;
+
 }
 
 bool Scene::RenderScene12(HWND hText)

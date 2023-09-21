@@ -8,8 +8,20 @@ Mesh::Mesh(const std::vector<float>& vertices, VertexLayout& layout)
     m_VAO.Setup(m_VBO, layout);
 }
 
+Mesh::Mesh(const std::vector<float>& vertices, const std::vector<Texture>& textures, VertexLayout& layout)
+    : m_VAO(), m_VBO(vertices), m_IBO(), m_Textures(textures)
+{
+    m_VAO.Setup(m_VBO, layout);
+}
+
 Mesh::Mesh(const std::vector<float>& vertices, const std::vector<uint32_t>& indices, VertexLayout& layout)
     : m_VAO(), m_VBO(vertices), m_IBO(indices)
+{
+    m_VAO.Setup(m_VBO, m_IBO, layout);
+}
+
+Mesh::Mesh(const std::vector<float>& vertices, const std::vector<uint32_t>& indices, const std::vector<Texture>& textures, VertexLayout& layout)
+    : m_VAO(), m_VBO(vertices), m_IBO(indices), m_Textures(textures)
 {
     m_VAO.Setup(m_VBO, m_IBO, layout);
 }
@@ -29,12 +41,6 @@ Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& ind
         VBO instanceVBO(instanceMatrix);
         instanceVBO.SetupInstanceVBOMat4(m_VAO.GetVAO(), 3, 1);
     }
-}
-
-Mesh::Mesh(const std::vector<float>& vertices, const std::vector<uint32_t>& indices, const std::vector<Texture>& textures, VertexLayout& layout)
-    : m_VAO(), m_VBO(vertices), m_IBO(indices), m_Textures(textures)
-{
-    m_VAO.Setup(m_VBO, m_IBO, layout);
 }
 
 void Mesh::Draw(Shader& shader, uint32_t instanceCount)
