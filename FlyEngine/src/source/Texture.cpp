@@ -28,14 +28,14 @@ Texture::Texture(const std::string& path, const std::string& type, int32_t wrap_
 	}
 	else if (m_NrChannels == 3)
 	{
-		if(type != "texture_specular")
+		if(type != "texture_specular" && type != "texture_normal")
 			internal_format = GL_SRGB;
 
 		external_format = GL_RGB;
 	}
 	else if (m_NrChannels == 4)
 	{
-		if(type != "texture_specular")
+		if(type != "texture_specular" && type != "texture_normal")
 			internal_format = GL_SRGB_ALPHA;
 
 		external_format = GL_RGBA;
