@@ -49,10 +49,10 @@ void Mesh::Draw(Shader& shader, uint32_t instanceCount)
 
     uint32_t diffuseNr = 1;
     uint32_t specularNr = 1;
+    uint32_t normalNr = 1;
 
-    for (uint32_t textureUnit = 0; textureUnit < m_Textures.size(); textureUnit++)
+    for (uint32_t textureUnit = 0; textureUnit < m_Textures.size(); textureUnit)
     {
-
         std::string number;
         std::string name = m_Textures[textureUnit].GetType();
 
@@ -60,13 +60,15 @@ void Mesh::Draw(Shader& shader, uint32_t instanceCount)
             number = std::to_string(diffuseNr++);
         else if (name == "texture_specular")
             number = std::to_string(specularNr++);
+        else if (name == "texture_normal")
+            number = std::to_string(normalNr++);
 
         shader.SetUniform1i(("uMaterial." + name + number).c_str(), textureUnit);
 
         m_Textures[textureUnit].Bind(textureUnit++);
     }
 
-    m_VAO.Bind();
+    m_VAO.Bind(); 
 
     if(instanceCount == 1)
         if(m_IBO.GetIndicesCount())
