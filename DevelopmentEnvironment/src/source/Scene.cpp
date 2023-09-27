@@ -24,6 +24,9 @@ bool Scene::RenderScene1(HWND hText)
 
     Shader shaderBackpackNormals(fileSys.GetExecutableDirPath() + "\\res\\shaders\\backpacknormals.shader");
 
+    Shader shaderBackpackNormalMapped(fileSys.GetExecutableDirPath() + "\\res\\shaders\\backpacknormalmapped.shader");
+    shaderBackpackNormalMapped.SetUniform1f("uMaterial.shininess", 32.0f);
+
     Shader shaderFlower(fileSys.GetExecutableDirPath() + "\\res\\shaders\\flowers.shader");
     shaderFlower.SetUniform1f("uMaterial.shininess", 32.0f);
 
@@ -322,6 +325,32 @@ bool Scene::RenderScene1(HWND hText)
             modelBackpack.Draw(shaderBackpackNormals);
 
             model = glm::mat4(1);
+            model = glm::translate(model, glm::vec3(5.0f, 2.0f, -5.4f));
+            model = glm::rotate(model, glm::radians(240.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            model = glm::scale(model, glm::vec3(0.7f));
+
+            shaderBackpackNormalMapped.Bind();
+            shaderBackpackNormalMapped.SetUniformMat4f("uMVP", projection * view * model);
+            shaderBackpackNormalMapped.SetUniformMat4f("uModel", model);
+            shaderBackpackNormalMapped.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
+            shaderBackpackNormalMapped.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
+            shaderBackpackNormalMapped.SetUniformVec3f("uDirLightDirection", glm::vec3(0.0f, -1.0f, -0.3f));
+            shaderBackpackNormalMapped.SetUniformVec3f("uDirLight.ambient", ambientDirlightColor);
+            shaderBackpackNormalMapped.SetUniformVec3f("uDirLight.diffuse", diffuseDirlightColor);
+            shaderBackpackNormalMapped.SetUniformVec3f("uDirLight.specular", glm::vec3(0.3f));
+                          
+            shaderBackpackNormalMapped.SetUniformVec3f("uPointLightPos", glm::vec3(2.0f, 3.5f, 1.0f));
+            shaderBackpackNormalMapped.SetUniformVec3f("uPointLight.position", glm::vec3(2.0f, 3.5f, 1.0f));
+            shaderBackpackNormalMapped.SetUniform1f("uPointLight.constant", 1.0f);
+            shaderBackpackNormalMapped.SetUniform1f("uPointLight.linear", 0.009f);
+            shaderBackpackNormalMapped.SetUniform1f("uPointLight.quadratic", 0.0032f);
+            shaderBackpackNormalMapped.SetUniformVec3f("uPointLight.ambient", ambientPointColor);
+            shaderBackpackNormalMapped.SetUniformVec3f("uPointLight.diffuse", diffusePointColor);
+            shaderBackpackNormalMapped.SetUniformVec3f("uPointLight.specular", glm::vec3(0.0f));
+
+            modelBackpack.Draw(shaderBackpackNormalMapped);
+
+            model = glm::mat4(1);
             model = glm::translate(model, glm::vec3(-3.0f, 1.2f, 0.0f));
             model = glm::scale(model, glm::vec3(0.7f));
 
@@ -526,6 +555,32 @@ bool Scene::RenderScene1(HWND hText)
             shaderBackpackNormals.SetUniformMat4f("uProjection", projection);
 
             modelBackpack.Draw(shaderBackpackNormals);
+
+            model = glm::mat4(1);
+            model = glm::translate(model, glm::vec3(5.0f, 2.0f, -5.4f));
+            model = glm::rotate(model, glm::radians(240.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            model = glm::scale(model, glm::vec3(0.7f));
+
+            shaderBackpackNormalMapped.Bind();
+            shaderBackpackNormalMapped.SetUniformMat4f("uMVP", projection* view* model);
+            shaderBackpackNormalMapped.SetUniformMat4f("uModel", model);
+            shaderBackpackNormalMapped.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
+            shaderBackpackNormalMapped.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
+            shaderBackpackNormalMapped.SetUniformVec3f("uDirLightDirection", glm::vec3(0.0f, -1.0f, -0.3f));
+            shaderBackpackNormalMapped.SetUniformVec3f("uDirLight.ambient", ambientDirlightColor);
+            shaderBackpackNormalMapped.SetUniformVec3f("uDirLight.diffuse", diffuseDirlightColor);
+            shaderBackpackNormalMapped.SetUniformVec3f("uDirLight.specular", glm::vec3(0.3f));
+
+            shaderBackpackNormalMapped.SetUniformVec3f("uPointLightPos", glm::vec3(2.0f, 3.5f, 1.0f));
+            shaderBackpackNormalMapped.SetUniformVec3f("uPointLight.position", glm::vec3(2.0f, 3.5f, 1.0f));
+            shaderBackpackNormalMapped.SetUniform1f("uPointLight.constant", 1.0f);
+            shaderBackpackNormalMapped.SetUniform1f("uPointLight.linear", 0.009f);
+            shaderBackpackNormalMapped.SetUniform1f("uPointLight.quadratic", 0.0032f);
+            shaderBackpackNormalMapped.SetUniformVec3f("uPointLight.ambient", ambientPointColor);
+            shaderBackpackNormalMapped.SetUniformVec3f("uPointLight.diffuse", diffusePointColor);
+            shaderBackpackNormalMapped.SetUniformVec3f("uPointLight.specular", glm::vec3(0.0f));
+
+            modelBackpack.Draw(shaderBackpackNormalMapped);
 
             model = glm::mat4(1);
             model = glm::translate(model, glm::vec3(-3.0f, 1.2f, 0.0f));
@@ -1224,7 +1279,7 @@ bool Scene::RenderScene5(HWND hText)
         shaderPlane.SetUniformMat4f("uModel", model);
         shaderPlane.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
         shaderPlane.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
-        shaderPlane.SetUniform3f("uDirLight.direction", -0.2f, 0.1f, -1.0f);
+        shaderPlane.SetUniformVec3f("uDirLightDirection", glm::vec3(-0.2f, 0.1f, -1.0f));
         shaderPlane.SetUniformVec3f("uDirLight.ambient", ambientDirlightColor);
         shaderPlane.SetUniformVec3f("uDirLight.diffuse", diffuseDirlightColor);
         shaderPlane.SetUniformVec3f("uDirLight.specular", specularDirlightColor);
@@ -1566,11 +1621,12 @@ bool Scene::RenderScene8(HWND hText)
         shaderTitan.SetUniformMat4f("uModel", model);
         shaderTitan.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
         shaderTitan.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
-        shaderTitan.SetUniform3f("uDirLight.direction", 0.2f, 1.0f, 0.1f);
+        shaderTitan.SetUniform3f("uDirLightDirection", 0.2f, 1.0f, 0.1f);
         shaderTitan.SetUniformVec3f("uDirLight.ambient", ambientDirlightColor);
         shaderTitan.SetUniformVec3f("uDirLight.diffuse", diffuseDirlightColor);
         shaderTitan.SetUniformVec3f("uDirLight.specular", specularDirlightColor);
 
+        shaderTitan.SetUniformVec3f("uSpotLightPos", camera.GetCameraPosition());
         shaderTitan.SetUniformVec3f("uSpotLight.position", camera.GetCameraPosition());
         shaderTitan.SetUniformVec3f("uSpotLight.direction", camera.GetCameraFront());
         shaderTitan.SetUniform1f("uSpotLight.cutOff", glm::cos(glm::radians(2.5f)));
@@ -1580,7 +1636,7 @@ bool Scene::RenderScene8(HWND hText)
         shaderTitan.SetUniformVec3f("uSpotLight.specular", specularSpotlightColor);
         shaderTitan.SetUniform1f("uSpotLight.constant", 1.0f);
         shaderTitan.SetUniform1f("uSpotLight.linear", 0.09f);
-        shaderTitan.SetUniform1f("uSpotLight.quadratic", 0.009f);
+        shaderTitan.SetUniform1f("uSpotLight.quadratic", 0.09f);
 
         elapsedTime += timer.GetDeltaTime();
 

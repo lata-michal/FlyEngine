@@ -33,6 +33,8 @@ Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& ind
     layout.AddVec3(0);
     layout.AddVec3(1);
     layout.AddVec2(2);
+    layout.AddVec3(3);
+    layout.AddVec3(4);
 
     m_VAO.Setup(m_VBO, m_IBO, layout);
 

@@ -67,7 +67,7 @@ uniform Material uMaterial;
 
 void main()
 {
-    vec3 normal  = texture(uMaterial.texture_normal1, vs_in.texCoord).rgb;
+    vec3 normal =  texture(uMaterial.texture_normal1, vs_in.texCoord).rgb;
     normal = normalize(normal * 2.0 - 1.0);
 
     vec3 color = texture(uMaterial.texture_diffuse1, vs_in.texCoord).rgb;

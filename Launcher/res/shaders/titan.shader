@@ -4,23 +4,45 @@
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
 layout(location = 2) in vec2 texCoord;
+layout(location = 3) in vec3 tangent;
+layout(location = 4) in vec3 bitangent;
+
+out VS_OUT
+{
+    vec3 fragPos;
+    vec2 texCoord;
+    vec3 tangentViewPos;
+    vec3 tangentFragPos;
+    vec3 tangentDirLightDirection;
+    vec3 tangentPointLightPos;
+    vec3 tangentSpotLightPos;
+} vs_out;
+
+uniform vec3 uDirLightDirection;
+uniform vec3 uPointLightPos;
+uniform vec3 uSpotLightPos;
+uniform vec3 uViewPos;
 
 uniform mat4 uMVP;
 uniform mat4 uModel;
 uniform mat3 uTranInvModel;
 
-out VS_OUT 
-{
-    vec2 texCoord;
-    vec3 normal;
-    vec3 fragPos;
-} vs_out;
-
 void main()
 {
-    vs_out.normal = uTranInvModel * normal;
     vs_out.fragPos = vec3(uModel * vec4(position, 1.0));
     vs_out.texCoord = texCoord;
+
+    vec3 T = normalize(uTranInvModel * tangent);
+    vec3 N = normalize(uTranInvModel * normal);
+    T = normalize(T - dot(T, N) * N);
+    vec3 B = cross(N, T);
+    mat3 TBNmatrix = transpose(mat3(T, B, N));
+
+    vs_out.tangentViewPos = TBNmatrix * uViewPos;
+    vs_out.tangentFragPos = TBNmatrix * vs_out.fragPos;
+    vs_out.tangentDirLightDirection = TBNmatrix * uDirLightDirection;
+    vs_out.tangentPointLightPos = TBNmatrix * uPointLightPos;
+    vs_out.tangentSpotLightPos = TBNmatrix * uSpotLightPos;
 
     gl_Position = uMVP * vec4(position, 1.0);
 }
@@ -33,16 +55,24 @@ layout (triangle_strip, max_vertices = 3) out;
 
 in VS_OUT 
 {
-    vec2 texCoord;
-    vec3 normal;
     vec3 fragPos;
-} gs_in[];
+    vec2 texCoord;
+    vec3 tangentViewPos;
+    vec3 tangentFragPos;
+    vec3 tangentDirLightDirection;
+    vec3 tangentPointLightPos;
+    vec3 tangentSpotLightPos;
+} vs_in[];
 
 out GS_OUT
 {
-    vec2 texCoord;
-    vec3 normal;
     vec3 fragPos;
+    vec2 texCoord;
+    vec3 tangentViewPos;
+    vec3 tangentFragPos;
+    vec3 tangentDirLightDirection;
+    vec3 tangentPointLightPos;
+    vec3 tangentSpotLightPos;
 } gs_out;
 
 uniform float uTime;
@@ -66,21 +96,33 @@ void main()
     vec3 normal = GetNormal();
 
     gl_Position = implode(gl_in[0].gl_Position, normal);
-    gs_out.texCoord = gs_in[0].texCoord;
-    gs_out.normal = gs_in[0].normal;
-    gs_out.fragPos = gs_in[0].fragPos;
+    gs_out.texCoord = vs_in[0].texCoord;
+    gs_out.fragPos = vs_in[0].fragPos;
+    gs_out.tangentViewPos = vs_in[0].tangentViewPos;
+    gs_out.tangentFragPos = vs_in[0].tangentFragPos;
+    gs_out.tangentDirLightDirection = vs_in[0].tangentDirLightDirection;
+    gs_out.tangentPointLightPos = vs_in[0].tangentPointLightPos;
+    gs_out.tangentSpotLightPos = vs_in[0].tangentSpotLightPos;
     EmitVertex();
 
     gl_Position = implode(gl_in[1].gl_Position, normal);
-    gs_out.texCoord = gs_in[1].texCoord;
-    gs_out.normal = gs_in[1].normal;
-    gs_out.fragPos = gs_in[1].fragPos;
+    gs_out.texCoord = vs_in[1].texCoord;
+    gs_out.fragPos = vs_in[1].fragPos;
+    gs_out.tangentViewPos = vs_in[1].tangentViewPos;
+    gs_out.tangentFragPos = vs_in[1].tangentFragPos;
+    gs_out.tangentDirLightDirection = vs_in[1].tangentDirLightDirection;
+    gs_out.tangentPointLightPos = vs_in[1].tangentPointLightPos;
+    gs_out.tangentSpotLightPos = vs_in[1].tangentSpotLightPos;
     EmitVertex();
 
     gl_Position = implode(gl_in[2].gl_Position, normal);
-    gs_out.texCoord = gs_in[2].texCoord;
-    gs_out.normal = gs_in[2].normal;
-    gs_out.fragPos = gs_in[2].fragPos;
+    gs_out.texCoord = vs_in[2].texCoord;
+    gs_out.fragPos = vs_in[2].fragPos;
+    gs_out.tangentViewPos = vs_in[2].tangentViewPos;
+    gs_out.tangentFragPos = vs_in[2].tangentFragPos;
+    gs_out.tangentDirLightDirection = vs_in[2].tangentDirLightDirection;
+    gs_out.tangentPointLightPos = vs_in[2].tangentPointLightPos;
+    gs_out.tangentSpotLightPos = vs_in[2].tangentSpotLightPos;
     EmitVertex();
 
     EndPrimitive();
@@ -91,25 +133,29 @@ void main()
 
 out vec4 fragmentColor;
 
-in GS_OUT 
-{
-    vec2 texCoord;
-    vec3 normal;
+in GS_OUT
+{ 
     vec3 fragPos;
-} fs_in;
+    vec2 texCoord;
+    vec3 tangentViewPos;
+    vec3 tangentFragPos;
+    vec3 tangentDirLightDirection;
+    vec3 tangentPointLightPos;
+    vec3 tangentSpotLightPos;
+    vec3 tangentSpotLightDirection;
+} gs_in;
 
 struct Material
 {
     sampler2D texture_diffuse1;
     sampler2D texture_specular1;
+    sampler2D texture_normal1;
 
     float shininess;
 };
 
 struct DirLight
 {
-    vec3 direction;
-
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
@@ -154,18 +200,21 @@ float calcSpec(vec3 normal, vec3 lightDir, vec3 viewDir);
 
 uniform Material uMaterial;
 uniform DirLight uDirLight;
+uniform PointLight uPointLight;
 uniform SpotLight uSpotLight;
-uniform vec3 uViewPos;
 
 void main()
 {
-    vec3 norm = normalize(fs_in.normal);
+    vec3 norm = texture(uMaterial.texture_normal1, gs_in.texCoord).rgb;
+    norm = normalize(norm * 2.0 - 1.0);
 
-    vec3 viewDir = normalize(uViewPos - fs_in.fragPos);
+    vec3 viewDir = normalize(gs_in.tangentViewPos - gs_in.tangentFragPos);
 
     vec3 result = calcDirLight(uDirLight, norm, viewDir);
 
-    result += calcSpotLight(uSpotLight, norm, fs_in.fragPos, viewDir);
+    //result += calcPointLight(uPointLight, norm, gs_in.fragPos, viewDir);
+
+    result += calcSpotLight(uSpotLight, norm, gs_in.fragPos, viewDir);
 
     fragmentColor = vec4(result, 1.0);
 }
@@ -173,26 +222,36 @@ void main()
 
 vec3 calcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 {
-    vec3 lightDir = normalize(-light.direction);
+    vec3 lightDir = normalize(-gs_in.tangentDirLightDirection);
 
-    vec3 ambient = light.ambient * vec3(texture(uMaterial.texture_diffuse1, fs_in.texCoord));
+    float diff = calcDiff(normal, lightDir);
+    float spec = 0.0;
+    if(diff > 0.0)
+        spec = calcSpec(normal, lightDir, viewDir);
 
-    vec3 diffuse = light.diffuse * calcDiff(normal, lightDir) * vec3(texture(uMaterial.texture_diffuse1, fs_in.texCoord));
+    vec3 ambient = light.ambient * vec3(texture(uMaterial.texture_diffuse1, gs_in.texCoord));
 
-    vec3 specular = light.specular * calcSpec(normal, lightDir, viewDir) * vec3(texture(uMaterial.texture_specular1, fs_in.texCoord));
+    vec3 diffuse = light.diffuse * diff * vec3(texture(uMaterial.texture_diffuse1, gs_in.texCoord));
+
+    vec3 specular = light.specular * spec * vec3(texture(uMaterial.texture_specular1, gs_in.texCoord));
 
     return (ambient + diffuse + specular);
 }
 
 vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
-    vec3 lightDir = normalize(light.position - fragPos);
+    vec3 lightDir = normalize(gs_in.tangentPointLightPos - gs_in.tangentFragPos);
 
-    vec3 ambient = light.ambient * vec3(texture(uMaterial.texture_diffuse1, fs_in.texCoord));
-    
-    vec3 diffuse = light.diffuse * calcDiff(normal, lightDir) * vec3(texture(uMaterial.texture_diffuse1, fs_in.texCoord));
+    float diff = calcDiff(normal, lightDir);
+    float spec = 0.0;
+    if(diff > 0.0)
+        spec = calcSpec(normal, lightDir, viewDir);
 
-    vec3 specular = light.specular * calcSpec(normal, lightDir, viewDir) * vec3(texture(uMaterial.texture_specular1, fs_in.texCoord));
+    vec3 ambient = light.ambient * vec3(texture(uMaterial.texture_diffuse1, gs_in.texCoord));
+
+    vec3 diffuse = light.diffuse * diff * vec3(texture(uMaterial.texture_diffuse1, gs_in.texCoord));
+
+    vec3 specular = light.specular * spec * vec3(texture(uMaterial.texture_specular1, gs_in.texCoord));
 
     float distance = length(light.position - fragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
@@ -206,16 +265,21 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 
 vec3 calcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
-    vec3 lightDir = normalize(light.position - fragPos);
+    vec3 lightDir = normalize(gs_in.tangentSpotLightPos - gs_in.tangentFragPos);
 
-    vec3 ambient = light.ambient * vec3(texture(uMaterial.texture_diffuse1, fs_in.texCoord));
+    float diff = calcDiff(normal, lightDir);
+    float spec = 0.0;
+    if(diff > 0.0)
+        spec = calcSpec(normal, lightDir, viewDir);
 
-    vec3 diffuse = light.diffuse * calcDiff(normal, lightDir) * vec3(texture(uMaterial.texture_diffuse1, fs_in.texCoord));
+    vec3 ambient = light.ambient * vec3(texture(uMaterial.texture_diffuse1, gs_in.texCoord));
 
-    vec3 specular = light.specular * calcSpec(normal, lightDir, viewDir) * vec3(texture(uMaterial.texture_specular1, fs_in.texCoord));
+    vec3 diffuse = light.diffuse * diff * vec3(texture(uMaterial.texture_diffuse1, gs_in.texCoord));
+
+    vec3 specular = light.specular * spec * vec3(texture(uMaterial.texture_specular1, gs_in.texCoord));
 
     //spotlight
-    float theta = dot(lightDir, normalize(-light.direction));
+    float theta = dot(normalize(light.position - fragPos), normalize(-light.direction));
     float epsilon = (light.cutOff - light.outerCutOff);
     float intensity = clamp(((theta - light.outerCutOff) / epsilon), 0.0, 1.0);
     
@@ -223,7 +287,7 @@ vec3 calcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     specular *= intensity;
 
     float distance = length(light.position - fragPos);
-    float attenuation = 1.0 /  distance;
+    float attenuation = 1.0 /  (light.constant + light.linear * distance + light.quadratic * (distance * distance));
 
     ambient *= attenuation;
     diffuse *= attenuation;
@@ -239,6 +303,7 @@ float calcDiff(vec3 normal, vec3 lightDir)
 
 float calcSpec(vec3 normal, vec3 lightDir, vec3 viewDir)
 {
-    vec3 reflectDir = reflect(-lightDir, normal);
-    return pow(max(dot(viewDir, reflectDir), 0.0), uMaterial.shininess);
+    //vec3 reflectDir = reflect(-lightDir, normal);
+    vec3 halfwayDir = normalize(lightDir + viewDir);
+    return pow(max(dot(normal, halfwayDir), 0.0), uMaterial.shininess);
 }

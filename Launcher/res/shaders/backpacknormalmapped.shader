@@ -131,7 +131,7 @@ void main()
 
     vec3 result = calcDirLight(uDirLight, norm, viewDir);
 
-    //result += calcPointLight(uPointLight, norm, vs_in.fragPos, viewDir);
+    result += calcPointLight(uPointLight, norm, vs_in.fragPos, viewDir);
 
     //result += calcSpotLight(uSpotLight, norm, vs_in.fragPos, viewDir);
 
