@@ -2510,16 +2510,17 @@ bool Scene::RenderScene12(HWND hText)
     layout.AddVec3(3);
     layout.AddVec3(4);
 
-    Texture diffTex(fileSys.GetExecutableDirPath() + "\\res\\textures\\brick_diffuse.png", "texture_diffuse", GL_CLAMP_TO_EDGE);
-    Texture normTex(fileSys.GetExecutableDirPath() + "\\res\\textures\\brick_normal.png", "texture_normal", GL_CLAMP_TO_EDGE);
+    Texture diffTex(fileSys.GetExecutableDirPath() + "\\res\\textures\\bricks2_diffuse.jpg", "texture_diffuse", GL_CLAMP_TO_EDGE);
+    Texture normTex(fileSys.GetExecutableDirPath() + "\\res\\textures\\bricks2_normal.jpg", "texture_normal", GL_CLAMP_TO_EDGE);
+    Texture dispTex(fileSys.GetExecutableDirPath() + "\\res\\textures\\bricks2_displacement.jpg", "texture_displacement", GL_CLAMP_TO_EDGE);
 
-    std::vector<Texture> textures = { diffTex, normTex };
+    std::vector<Texture> textures = { diffTex, normTex, dispTex };
 
     Mesh plane(vertices, textures, layout);
 
     glm::vec3 lightPos(0.5f, 0.5f, 0.5f);
 
-    Shader brickwallProgram(fileSys.GetExecutableDirPath() + "\\res\\shaders\\brickwallnormalmapped.shader");
+    Shader brickwallProgram(fileSys.GetExecutableDirPath() + "\\res\\shaders\\brickwallnormalparallaxmapped.shader");
     brickwallProgram.SetUniformVec3f("uLightPos", lightPos);
     brickwallProgram.SetUniform1f("uMaterial.shininess", 16.0f);
     Shader lightCube(fileSys.GetExecutableDirPath() + "\\res\\shaders\\minsun.shader");
@@ -2540,13 +2541,14 @@ bool Scene::RenderScene12(HWND hText)
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 model = glm::mat4(1);
 
-        model = glm::rotate(model, glm::radians(static_cast<float>(glfwGetTime()) * -10.0f), glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f)));
+        //model = glm::rotate(model, glm::radians(static_cast<float>(glfwGetTime()) * -10.0f), glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f)));
 
         brickwallProgram.Bind();
         brickwallProgram.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
         brickwallProgram.SetUniformMat4f("uModel", model);
         brickwallProgram.SetUniformMat4f("uMVP", projection * view * model);
         brickwallProgram.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
+        brickwallProgram.SetUniform1f("uHeightScale", 0.1f);
 
         plane.Draw(brickwallProgram);
 
@@ -2573,12 +2575,419 @@ bool Scene::RenderScene13(HWND hText)
 {
     using namespace feng;
 
+    m_ForcedEnd = false;
+    Log::SetHandleTextBox(hText);
+
+    Window::Initialize(1600, 1100, "FlyEngine :-)", false, 4, 3, GLFW_OPENGL_CORE_PROFILE, true, 0.03f);
+
+    if (!Window::ValidateWindow())
+        return false;
+
+    FileSystem fileSys;
+
+    Timer timer;
+
+    Camera camera(0.0f, 0.0f, 6.0f);
+
+    camera.AddKeyBinding(GLFW_KEY_ESCAPE, KeyActions::EXIT);
+    camera.AddKeyBinding(GLFW_KEY_W, KeyActions::FORWARD);
+    camera.AddKeyBinding(GLFW_KEY_A, KeyActions::LEFT);
+    camera.AddKeyBinding(GLFW_KEY_S, KeyActions::BACKWARD);
+    camera.AddKeyBinding(GLFW_KEY_D, KeyActions::RIGHT);
+    camera.AddKeyBinding(GLFW_KEY_F11, KeyActions::FULLSCREEN);
+    camera.AddMouseBinding(0, MouseActions::LOOKAROUND);
+    camera.AddScrollBinding(0, ScrollActions::ZOOM);
+
+    std::vector<float> cubeVertices = {
+        // back face        
+        -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+         1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+         1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f, // bottom-right         
+         1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+        -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+        -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f, // top-left
+        // front face
+        -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+         1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 0.0f, // bottom-right
+         1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+         1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+        -1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 1.0f, // top-left
+        -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+        // left face
+        -1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+        -1.0f,  1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-left
+        -1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+        -1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+        -1.0f, -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+        -1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+        // right face
+         1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+         1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+         1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-right         
+         1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+         1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+         1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-left     
+         // bottom face
+         -1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+          1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f, // top-left
+          1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+          1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+         -1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+         -1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+         // top face
+         -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+          1.0f,  1.0f , 1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+          1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f, // top-right     
+          1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+         -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+         -1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f  // bottom-left        
+    };
+
+    VertexLayout cubeVerticesLayout;
+    cubeVerticesLayout.AddVec3(0);
+    cubeVerticesLayout.AddVec3(1);
+    cubeVerticesLayout.AddVec2(2);
+
+    Mesh cube(cubeVertices, cubeVerticesLayout);
+
+    glm::vec3 pos1(-1.0f, -1.0f, 0.0f); // 0 & 1 & 2, 0 & 2 & 3
+    glm::vec3 pos2(-1.0f, 1.0f, 0.0f);
+    glm::vec3 pos3(1.0f, 1.0f, 0.0f);
+    glm::vec3 pos4(1.0f, -1.0f, 0.0f);
+
+    glm::vec3 norm(0.0f, 0.0f, 1.0f);
+
+    glm::vec2 uv1(0.0f, 0.0f);
+    glm::vec2 uv2(0.0f, 1.0f);
+    glm::vec2 uv3(1.0f, 1.0f);
+    glm::vec2 uv4(1.0f, 0.0f);
+
+    //first triangle
+
+    glm::vec3 tangent1;
+    glm::vec3 bitangent1;
+
+    glm::vec3 edge1 = pos2 - pos1;
+    glm::vec3 edge2 = pos3 - pos1;
+
+    glm::vec2 dUV1 = uv2 - uv1;
+    glm::vec2 dUV2 = uv3 - uv1;
+
+    float f = (1.0f / (dUV1.x * dUV2.y - dUV2.x * dUV1.y));
+
+    tangent1.x = f * (edge1.x * dUV2.y - edge2.x * dUV1.y);
+    tangent1.y = f * (edge1.y * dUV2.y - edge2.y * dUV1.y);
+    tangent1.z = f * (edge1.z * dUV2.y - edge2.z * dUV1.y);
+
+    bitangent1.x = f * (edge1.x * (-dUV2.x) + edge2.x * dUV1.x);
+    bitangent1.y = f * (edge1.y * (-dUV2.x) + edge2.y * dUV1.x);
+    bitangent1.z = f * (edge1.z * (-dUV2.x) + edge2.z * dUV1.x);
+
+    //second triangle
+
+    glm::vec3 tangent2;
+    glm::vec3 bitangent2;
+
+    edge1 = pos3 - pos1;
+    edge2 = pos4 - pos1;
+
+    dUV1 = uv3 - uv1;
+    dUV2 = uv4 - uv1;
+
+    f = (1.0f / (dUV1.x * dUV2.y - dUV2.x * dUV1.y));
+
+    tangent2.x = f * (edge1.x * dUV2.y - edge2.x * dUV1.y);
+    tangent2.y = f * (edge1.y * dUV2.y - edge2.y * dUV1.y);
+    tangent2.z = f * (edge1.z * dUV2.y - edge2.z * dUV1.y);
+
+    bitangent2.x = f * (edge1.x * (-dUV2.x) + edge2.x * dUV1.x);
+    bitangent2.y = f * (edge1.y * (-dUV2.x) + edge2.y * dUV1.x);
+    bitangent2.z = f * (edge1.z * (-dUV2.x) + edge2.z * dUV1.x);
+
+    std::vector<float> vertices = {
+        pos1.x, pos1.y, pos1.z, norm.x, norm.y, norm.z, uv1.x, uv1.y, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
+        pos2.x, pos2.y, pos2.z, norm.x, norm.y, norm.z, uv2.x, uv2.y, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
+        pos3.x, pos3.y, pos3.z, norm.x, norm.y, norm.z, uv3.x, uv3.y, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
+        pos1.x, pos1.y, pos1.z, norm.x, norm.y, norm.z, uv1.x, uv1.y, tangent2.x, tangent2.y, tangent2.z, bitangent2.x, bitangent2.y, bitangent2.z,
+        pos3.x, pos3.y, pos3.z, norm.x, norm.y, norm.z, uv3.x, uv3.y, tangent2.x, tangent2.y, tangent2.z, bitangent2.x, bitangent2.y, bitangent2.z,
+        pos4.x, pos4.y, pos4.z, norm.x, norm.y, norm.z, uv4.x, uv4.y, tangent2.x, tangent2.y, tangent2.z, bitangent2.x, bitangent2.y, bitangent2.z,
+    };
+
+    VertexLayout layout;
+    layout.AddVec3(0);
+    layout.AddVec3(1);
+    layout.AddVec2(2);
+    layout.AddVec3(3);
+    layout.AddVec3(4);
+
+    Texture diffTex(fileSys.GetExecutableDirPath() + "\\res\\textures\\wood.png", "texture_diffuse", GL_CLAMP_TO_EDGE, false);
+    Texture normTex(fileSys.GetExecutableDirPath() + "\\res\\textures\\toy_box_normal.png", "texture_normal", GL_CLAMP_TO_EDGE, false);
+    Texture dispTex(fileSys.GetExecutableDirPath() + "\\res\\textures\\toy_box_displacement.png", "texture_displacement", GL_CLAMP_TO_EDGE, false);
+
+    std::vector<Texture> textures = { diffTex, normTex, dispTex };
+
+    Mesh plane(vertices, textures, layout);
+
+    glm::vec3 lightPos(0.5f, 0.5f, 0.5f);
+
+    Shader brickwallProgram(fileSys.GetExecutableDirPath() + "\\res\\shaders\\brickwallnormalparallaxmapped.shader");
+    brickwallProgram.SetUniformVec3f("uLightPos", lightPos);
+    brickwallProgram.SetUniform1f("uMaterial.shininess", 16.0f);
+    Shader lightCube(fileSys.GetExecutableDirPath() + "\\res\\shaders\\minsun.shader");
+
+    while (!Window::WindowShouldClose() && !m_ForcedEnd)
+    {
+        Window::WindowProcessInput(camera);
+
+        timer.UpdateDelta();
+        timer.UpdateFPS();
+
+        Window::SetDeltaTime(timer.GetDeltaTime());
+        Window::SetWindowTitle("FlyEngine : -)    FPS: " + timer.GetStringFPS());
+
+        Window::Clear(0.0f, 0.0f, 0.0f, 1.0f, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), static_cast<float>(Window::GetWidth()) / static_cast<float>(Window::GetHeight()), 0.1f, 100.0f);
+        glm::mat4 view = camera.GetViewMatrix();
+        glm::mat4 model = glm::mat4(1);
+
+        //model = glm::rotate(model, glm::radians(static_cast<float>(glfwGetTime()) * -10.0f), glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f)));
+
+        brickwallProgram.Bind();
+        brickwallProgram.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
+        brickwallProgram.SetUniformMat4f("uModel", model);
+        brickwallProgram.SetUniformMat4f("uMVP", projection * view * model);
+        brickwallProgram.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
+        brickwallProgram.SetUniform1f("uHeightScale", 0.1f);
+
+        plane.Draw(brickwallProgram);
+
+        model = glm::mat4(1);
+        model = glm::translate(model, lightPos);
+        model = glm::scale(model, glm::vec3(0.05f));
+
+        lightCube.Bind();
+        lightCube.SetUniformMat4f("uMVP", projection * view * model);
+
+        cube.Draw(lightCube);
+
+        Window::SwapBuffers();
+        Window::PollEvents();
+    }
+
+    Window::Destroy();
+    Window::TerminateGLFW();
+
     return true;
 }
 
 bool Scene::RenderScene14(HWND hText)
 {
     using namespace feng;
+
+    m_ForcedEnd = false;
+    Log::SetHandleTextBox(hText);
+
+    Window::Initialize(1600, 1100, "FlyEngine :-)", false, 4, 3, GLFW_OPENGL_CORE_PROFILE, true, 0.03f);
+
+    if (!Window::ValidateWindow())
+        return false;
+
+    FileSystem fileSys;
+
+    Timer timer;
+
+    Camera camera(0.0f, 0.0f, 6.0f);
+
+    camera.AddKeyBinding(GLFW_KEY_ESCAPE, KeyActions::EXIT);
+    camera.AddKeyBinding(GLFW_KEY_W, KeyActions::FORWARD);
+    camera.AddKeyBinding(GLFW_KEY_A, KeyActions::LEFT);
+    camera.AddKeyBinding(GLFW_KEY_S, KeyActions::BACKWARD);
+    camera.AddKeyBinding(GLFW_KEY_D, KeyActions::RIGHT);
+    camera.AddKeyBinding(GLFW_KEY_F11, KeyActions::FULLSCREEN);
+    camera.AddMouseBinding(0, MouseActions::LOOKAROUND);
+    camera.AddScrollBinding(0, ScrollActions::ZOOM);
+
+    std::vector<float> cubeVertices = {
+        // back face        
+        -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+         1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+         1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f, // bottom-right         
+         1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+        -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+        -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f, // top-left
+        // front face
+        -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+         1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 0.0f, // bottom-right
+         1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+         1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+        -1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 1.0f, // top-left
+        -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+        // left face
+        -1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+        -1.0f,  1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-left
+        -1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+        -1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+        -1.0f, -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+        -1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+        // right face
+         1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+         1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+         1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-right         
+         1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+         1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+         1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-left     
+         // bottom face
+         -1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+          1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f, // top-left
+          1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+          1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+         -1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+         -1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+         // top face
+         -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+          1.0f,  1.0f , 1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+          1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f, // top-right     
+          1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+         -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+         -1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f  // bottom-left        
+    };
+
+    VertexLayout cubeVerticesLayout;
+    cubeVerticesLayout.AddVec3(0);
+    cubeVerticesLayout.AddVec3(1);
+    cubeVerticesLayout.AddVec2(2);
+
+    Mesh cube(cubeVertices, cubeVerticesLayout);
+
+    glm::vec3 pos1(-1.0f, -1.0f, 0.0f); // 0 & 1 & 2, 0 & 2 & 3
+    glm::vec3 pos2(-1.0f, 1.0f, 0.0f);
+    glm::vec3 pos3(1.0f, 1.0f, 0.0f);
+    glm::vec3 pos4(1.0f, -1.0f, 0.0f);
+
+    glm::vec3 norm(0.0f, 0.0f, 1.0f);
+
+    glm::vec2 uv1(0.0f, 0.0f);
+    glm::vec2 uv2(0.0f, 1.0f);
+    glm::vec2 uv3(1.0f, 1.0f);
+    glm::vec2 uv4(1.0f, 0.0f);
+
+    //first triangle
+
+    glm::vec3 tangent1;
+    glm::vec3 bitangent1;
+
+    glm::vec3 edge1 = pos2 - pos1;
+    glm::vec3 edge2 = pos3 - pos1;
+
+    glm::vec2 dUV1 = uv2 - uv1;
+    glm::vec2 dUV2 = uv3 - uv1;
+
+    float f = (1.0f / (dUV1.x * dUV2.y - dUV2.x * dUV1.y));
+
+    tangent1.x = f * (edge1.x * dUV2.y - edge2.x * dUV1.y);
+    tangent1.y = f * (edge1.y * dUV2.y - edge2.y * dUV1.y);
+    tangent1.z = f * (edge1.z * dUV2.y - edge2.z * dUV1.y);
+
+    bitangent1.x = f * (edge1.x * (-dUV2.x) + edge2.x * dUV1.x);
+    bitangent1.y = f * (edge1.y * (-dUV2.x) + edge2.y * dUV1.x);
+    bitangent1.z = f * (edge1.z * (-dUV2.x) + edge2.z * dUV1.x);
+
+    //second triangle
+
+    glm::vec3 tangent2;
+    glm::vec3 bitangent2;
+
+    edge1 = pos3 - pos1;
+    edge2 = pos4 - pos1;
+
+    dUV1 = uv3 - uv1;
+    dUV2 = uv4 - uv1;
+
+    f = (1.0f / (dUV1.x * dUV2.y - dUV2.x * dUV1.y));
+
+    tangent2.x = f * (edge1.x * dUV2.y - edge2.x * dUV1.y);
+    tangent2.y = f * (edge1.y * dUV2.y - edge2.y * dUV1.y);
+    tangent2.z = f * (edge1.z * dUV2.y - edge2.z * dUV1.y);
+
+    bitangent2.x = f * (edge1.x * (-dUV2.x) + edge2.x * dUV1.x);
+    bitangent2.y = f * (edge1.y * (-dUV2.x) + edge2.y * dUV1.x);
+    bitangent2.z = f * (edge1.z * (-dUV2.x) + edge2.z * dUV1.x);
+
+    std::vector<float> vertices = {
+        pos1.x, pos1.y, pos1.z, norm.x, norm.y, norm.z, uv1.x, uv1.y, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
+        pos2.x, pos2.y, pos2.z, norm.x, norm.y, norm.z, uv2.x, uv2.y, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
+        pos3.x, pos3.y, pos3.z, norm.x, norm.y, norm.z, uv3.x, uv3.y, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
+        pos1.x, pos1.y, pos1.z, norm.x, norm.y, norm.z, uv1.x, uv1.y, tangent2.x, tangent2.y, tangent2.z, bitangent2.x, bitangent2.y, bitangent2.z,
+        pos3.x, pos3.y, pos3.z, norm.x, norm.y, norm.z, uv3.x, uv3.y, tangent2.x, tangent2.y, tangent2.z, bitangent2.x, bitangent2.y, bitangent2.z,
+        pos4.x, pos4.y, pos4.z, norm.x, norm.y, norm.z, uv4.x, uv4.y, tangent2.x, tangent2.y, tangent2.z, bitangent2.x, bitangent2.y, bitangent2.z,
+    };
+
+    VertexLayout layout;
+    layout.AddVec3(0);
+    layout.AddVec3(1);
+    layout.AddVec2(2);
+    layout.AddVec3(3);
+    layout.AddVec3(4);
+
+    Texture diffTex(fileSys.GetExecutableDirPath() + "\\res\\textures\\brick_diffuse.png", "texture_diffuse", GL_CLAMP_TO_EDGE);
+    Texture normTex(fileSys.GetExecutableDirPath() + "\\res\\textures\\brick_normal.png", "texture_normal", GL_CLAMP_TO_EDGE);
+    Texture dispTex(fileSys.GetExecutableDirPath() + "\\res\\textures\\brick_diffuse.png", "texture_displacement", GL_CLAMP_TO_EDGE);
+
+    std::vector<Texture> textures = { diffTex, normTex, dispTex };
+
+    Mesh plane(vertices, textures, layout);
+
+    glm::vec3 lightPos(0.5f, 0.5f, 0.5f);
+
+    Shader brickwallProgram(fileSys.GetExecutableDirPath() + "\\res\\shaders\\brickwallnormalparallaxmappedinv.shader");
+    //Shader brickwallProgram(fileSys.GetExecutableDirPath() + "\\res\\shaders\\brickwallnormalmapped.shader");
+    brickwallProgram.SetUniformVec3f("uLightPos", lightPos);
+    brickwallProgram.SetUniform1f("uMaterial.shininess", 16.0f);
+    Shader lightCube(fileSys.GetExecutableDirPath() + "\\res\\shaders\\minsun.shader");
+
+    while (!Window::WindowShouldClose() && !m_ForcedEnd)
+    {
+        Window::WindowProcessInput(camera);
+
+        timer.UpdateDelta();
+        timer.UpdateFPS();
+
+        Window::SetDeltaTime(timer.GetDeltaTime());
+        Window::SetWindowTitle("FlyEngine : -)    FPS: " + timer.GetStringFPS());
+
+        Window::Clear(0.0f, 0.0f, 0.0f, 1.0f, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), static_cast<float>(Window::GetWidth()) / static_cast<float>(Window::GetHeight()), 0.1f, 100.0f);
+        glm::mat4 view = camera.GetViewMatrix();
+        glm::mat4 model = glm::mat4(1);
+
+        //model = glm::rotate(model, glm::radians(static_cast<float>(glfwGetTime()) * -10.0f), glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f)));
+
+        brickwallProgram.Bind();
+        brickwallProgram.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
+        brickwallProgram.SetUniformMat4f("uModel", model);
+        brickwallProgram.SetUniformMat4f("uMVP", projection * view * model);
+        brickwallProgram.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
+        brickwallProgram.SetUniform1f("uHeightScale", 0.05f);
+
+        plane.Draw(brickwallProgram);
+
+        model = glm::mat4(1);
+        model = glm::translate(model, lightPos);
+        model = glm::scale(model, glm::vec3(0.05f));
+
+        lightCube.Bind();
+        lightCube.SetUniformMat4f("uMVP", projection * view * model);
+
+        cube.Draw(lightCube);
+
+        Window::SwapBuffers();
+        Window::PollEvents();
+    }
+
+    Window::Destroy();
+    Window::TerminateGLFW();
 
     return true;
 }

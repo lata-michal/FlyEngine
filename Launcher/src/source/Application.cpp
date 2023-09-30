@@ -40,9 +40,9 @@ static std::vector<std::wstring> avCommands = {
     L"-blinn phong shading test",
     L"-shadow map -dir light test",
     L"-shadow map -point light test",
-    L"-scene normal mapping demo",
-    L"-scene 13",
-    L"-scene 14",
+    L"-normal & parallax mapping 1",
+    L"-normal & parallax mapping 2",
+    L"-normal & parallax mapping 3",
     L"-scene 15",
     L"-scene 16",
 };
