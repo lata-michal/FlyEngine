@@ -18,6 +18,7 @@
 #include <set>
 #include <cstdlib>
 #include <array>
+#include <cmath>
 
 //GLAD
 #include <GLAD\glad.h>
