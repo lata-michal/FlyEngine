@@ -33,6 +33,8 @@ Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& ind
     layout.AddVec3(0);
     layout.AddVec3(1);
     layout.AddVec2(2);
+    layout.AddVec3(3);
+    layout.AddVec3(4);
 
     m_VAO.Setup(m_VBO, m_IBO, layout);
 
@@ -50,6 +52,7 @@ void Mesh::Draw(Shader& shader, uint32_t instanceCount)
     uint32_t diffuseNr = 1;
     uint32_t specularNr = 1;
     uint32_t normalNr = 1;
+    uint32_t displacementNr = 1;
 
     for (uint32_t textureUnit = 0; textureUnit < m_Textures.size(); textureUnit)
     {
@@ -62,7 +65,9 @@ void Mesh::Draw(Shader& shader, uint32_t instanceCount)
             number = std::to_string(specularNr++);
         else if (name == "texture_normal")
             number = std::to_string(normalNr++);
-
+        else if (name == "texture_displacement")
+            number = std::to_string(displacementNr++);
+    
         shader.SetUniform1i(("uMaterial." + name + number).c_str(), textureUnit);
 
         m_Textures[textureUnit].Bind(textureUnit++);

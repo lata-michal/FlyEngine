@@ -24,6 +24,9 @@ bool Scene::RenderScene1(HWND hText)
 
     Shader shaderBackpackNormals(fileSys.GetExecutableDirPath() + "\\res\\shaders\\backpacknormals.shader");
 
+    Shader shaderBackpackNormalMapped(fileSys.GetExecutableDirPath() + "\\res\\shaders\\backpacknormalmapped.shader");
+    shaderBackpackNormalMapped.SetUniform1f("uMaterial.shininess", 32.0f);
+
     Shader shaderFlower(fileSys.GetExecutableDirPath() + "\\res\\shaders\\flowers.shader");
     shaderFlower.SetUniform1f("uMaterial.shininess", 32.0f);
 
@@ -322,6 +325,32 @@ bool Scene::RenderScene1(HWND hText)
             modelBackpack.Draw(shaderBackpackNormals);
 
             model = glm::mat4(1);
+            model = glm::translate(model, glm::vec3(5.0f, 2.0f, -5.4f));
+            model = glm::rotate(model, glm::radians(240.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            model = glm::scale(model, glm::vec3(0.7f));
+
+            shaderBackpackNormalMapped.Bind();
+            shaderBackpackNormalMapped.SetUniformMat4f("uMVP", projection * view * model);
+            shaderBackpackNormalMapped.SetUniformMat4f("uModel", model);
+            shaderBackpackNormalMapped.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
+            shaderBackpackNormalMapped.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
+            shaderBackpackNormalMapped.SetUniformVec3f("uDirLightDirection", glm::vec3(0.0f, -1.0f, -0.3f));
+            shaderBackpackNormalMapped.SetUniformVec3f("uDirLight.ambient", ambientDirlightColor);
+            shaderBackpackNormalMapped.SetUniformVec3f("uDirLight.diffuse", diffuseDirlightColor);
+            shaderBackpackNormalMapped.SetUniformVec3f("uDirLight.specular", glm::vec3(0.3f));
+                          
+            shaderBackpackNormalMapped.SetUniformVec3f("uPointLightPos", glm::vec3(2.0f, 3.5f, 1.0f));
+            shaderBackpackNormalMapped.SetUniformVec3f("uPointLight.position", glm::vec3(2.0f, 3.5f, 1.0f));
+            shaderBackpackNormalMapped.SetUniform1f("uPointLight.constant", 1.0f);
+            shaderBackpackNormalMapped.SetUniform1f("uPointLight.linear", 0.009f);
+            shaderBackpackNormalMapped.SetUniform1f("uPointLight.quadratic", 0.0032f);
+            shaderBackpackNormalMapped.SetUniformVec3f("uPointLight.ambient", ambientPointColor);
+            shaderBackpackNormalMapped.SetUniformVec3f("uPointLight.diffuse", diffusePointColor);
+            shaderBackpackNormalMapped.SetUniformVec3f("uPointLight.specular", glm::vec3(0.0f));
+
+            modelBackpack.Draw(shaderBackpackNormalMapped);
+
+            model = glm::mat4(1);
             model = glm::translate(model, glm::vec3(-3.0f, 1.2f, 0.0f));
             model = glm::scale(model, glm::vec3(0.7f));
 
@@ -526,6 +555,32 @@ bool Scene::RenderScene1(HWND hText)
             shaderBackpackNormals.SetUniformMat4f("uProjection", projection);
 
             modelBackpack.Draw(shaderBackpackNormals);
+
+            model = glm::mat4(1);
+            model = glm::translate(model, glm::vec3(5.0f, 2.0f, -5.4f));
+            model = glm::rotate(model, glm::radians(240.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            model = glm::scale(model, glm::vec3(0.7f));
+
+            shaderBackpackNormalMapped.Bind();
+            shaderBackpackNormalMapped.SetUniformMat4f("uMVP", projection* view* model);
+            shaderBackpackNormalMapped.SetUniformMat4f("uModel", model);
+            shaderBackpackNormalMapped.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
+            shaderBackpackNormalMapped.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
+            shaderBackpackNormalMapped.SetUniformVec3f("uDirLightDirection", glm::vec3(0.0f, -1.0f, -0.3f));
+            shaderBackpackNormalMapped.SetUniformVec3f("uDirLight.ambient", ambientDirlightColor);
+            shaderBackpackNormalMapped.SetUniformVec3f("uDirLight.diffuse", diffuseDirlightColor);
+            shaderBackpackNormalMapped.SetUniformVec3f("uDirLight.specular", glm::vec3(0.3f));
+
+            shaderBackpackNormalMapped.SetUniformVec3f("uPointLightPos", glm::vec3(2.0f, 3.5f, 1.0f));
+            shaderBackpackNormalMapped.SetUniformVec3f("uPointLight.position", glm::vec3(2.0f, 3.5f, 1.0f));
+            shaderBackpackNormalMapped.SetUniform1f("uPointLight.constant", 1.0f);
+            shaderBackpackNormalMapped.SetUniform1f("uPointLight.linear", 0.009f);
+            shaderBackpackNormalMapped.SetUniform1f("uPointLight.quadratic", 0.0032f);
+            shaderBackpackNormalMapped.SetUniformVec3f("uPointLight.ambient", ambientPointColor);
+            shaderBackpackNormalMapped.SetUniformVec3f("uPointLight.diffuse", diffusePointColor);
+            shaderBackpackNormalMapped.SetUniformVec3f("uPointLight.specular", glm::vec3(0.0f));
+
+            modelBackpack.Draw(shaderBackpackNormalMapped);
 
             model = glm::mat4(1);
             model = glm::translate(model, glm::vec3(-3.0f, 1.2f, 0.0f));
@@ -1224,7 +1279,7 @@ bool Scene::RenderScene5(HWND hText)
         shaderPlane.SetUniformMat4f("uModel", model);
         shaderPlane.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
         shaderPlane.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
-        shaderPlane.SetUniform3f("uDirLight.direction", -0.2f, 0.1f, -1.0f);
+        shaderPlane.SetUniformVec3f("uDirLightDirection", glm::vec3(-0.2f, 0.1f, -1.0f));
         shaderPlane.SetUniformVec3f("uDirLight.ambient", ambientDirlightColor);
         shaderPlane.SetUniformVec3f("uDirLight.diffuse", diffuseDirlightColor);
         shaderPlane.SetUniformVec3f("uDirLight.specular", specularDirlightColor);
@@ -1566,11 +1621,12 @@ bool Scene::RenderScene8(HWND hText)
         shaderTitan.SetUniformMat4f("uModel", model);
         shaderTitan.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
         shaderTitan.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
-        shaderTitan.SetUniform3f("uDirLight.direction", 0.2f, 1.0f, 0.1f);
+        shaderTitan.SetUniform3f("uDirLightDirection", 0.2f, 1.0f, 0.1f);
         shaderTitan.SetUniformVec3f("uDirLight.ambient", ambientDirlightColor);
         shaderTitan.SetUniformVec3f("uDirLight.diffuse", diffuseDirlightColor);
         shaderTitan.SetUniformVec3f("uDirLight.specular", specularDirlightColor);
 
+        shaderTitan.SetUniformVec3f("uSpotLightPos", camera.GetCameraPosition());
         shaderTitan.SetUniformVec3f("uSpotLight.position", camera.GetCameraPosition());
         shaderTitan.SetUniformVec3f("uSpotLight.direction", camera.GetCameraFront());
         shaderTitan.SetUniform1f("uSpotLight.cutOff", glm::cos(glm::radians(2.5f)));
@@ -1580,7 +1636,7 @@ bool Scene::RenderScene8(HWND hText)
         shaderTitan.SetUniformVec3f("uSpotLight.specular", specularSpotlightColor);
         shaderTitan.SetUniform1f("uSpotLight.constant", 1.0f);
         shaderTitan.SetUniform1f("uSpotLight.linear", 0.09f);
-        shaderTitan.SetUniform1f("uSpotLight.quadratic", 0.009f);
+        shaderTitan.SetUniform1f("uSpotLight.quadratic", 0.09f);
 
         elapsedTime += timer.GetDeltaTime();
 
@@ -2454,16 +2510,17 @@ bool Scene::RenderScene12(HWND hText)
     layout.AddVec3(3);
     layout.AddVec3(4);
 
-    Texture diffTex(fileSys.GetExecutableDirPath() + "\\res\\textures\\brick_diffuse.png", "texture_diffuse", GL_CLAMP_TO_EDGE);
-    Texture normTex(fileSys.GetExecutableDirPath() + "\\res\\textures\\brick_normal.png", "texture_normal", GL_CLAMP_TO_EDGE);
+    Texture diffTex(fileSys.GetExecutableDirPath() + "\\res\\textures\\bricks2_diffuse.jpg", "texture_diffuse", GL_CLAMP_TO_EDGE);
+    Texture normTex(fileSys.GetExecutableDirPath() + "\\res\\textures\\bricks2_normal.jpg", "texture_normal", GL_CLAMP_TO_EDGE);
+    Texture dispTex(fileSys.GetExecutableDirPath() + "\\res\\textures\\bricks2_displacement.jpg", "texture_displacement", GL_CLAMP_TO_EDGE);
 
-    std::vector<Texture> textures = { diffTex, normTex };
+    std::vector<Texture> textures = { diffTex, normTex, dispTex };
 
     Mesh plane(vertices, textures, layout);
 
     glm::vec3 lightPos(0.5f, 0.5f, 0.5f);
 
-    Shader brickwallProgram(fileSys.GetExecutableDirPath() + "\\res\\shaders\\brickwallnormalmapped.shader");
+    Shader brickwallProgram(fileSys.GetExecutableDirPath() + "\\res\\shaders\\brickwallnormalparallaxmapped.shader");
     brickwallProgram.SetUniformVec3f("uLightPos", lightPos);
     brickwallProgram.SetUniform1f("uMaterial.shininess", 16.0f);
     Shader lightCube(fileSys.GetExecutableDirPath() + "\\res\\shaders\\minsun.shader");
@@ -2484,13 +2541,14 @@ bool Scene::RenderScene12(HWND hText)
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 model = glm::mat4(1);
 
-        model = glm::rotate(model, glm::radians(static_cast<float>(glfwGetTime()) * -10.0f), glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f)));
+        //model = glm::rotate(model, glm::radians(static_cast<float>(glfwGetTime()) * -10.0f), glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f)));
 
         brickwallProgram.Bind();
         brickwallProgram.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
         brickwallProgram.SetUniformMat4f("uModel", model);
         brickwallProgram.SetUniformMat4f("uMVP", projection * view * model);
         brickwallProgram.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
+        brickwallProgram.SetUniform1f("uHeightScale", 0.1f);
 
         plane.Draw(brickwallProgram);
 
@@ -2517,12 +2575,419 @@ bool Scene::RenderScene13(HWND hText)
 {
     using namespace feng;
 
+    m_ForcedEnd = false;
+    Log::SetHandleTextBox(hText);
+
+    Window::Initialize(1600, 1100, "FlyEngine :-)", false, 4, 3, GLFW_OPENGL_CORE_PROFILE, true, 0.03f);
+
+    if (!Window::ValidateWindow())
+        return false;
+
+    FileSystem fileSys;
+
+    Timer timer;
+
+    Camera camera(0.0f, 0.0f, 6.0f);
+
+    camera.AddKeyBinding(GLFW_KEY_ESCAPE, KeyActions::EXIT);
+    camera.AddKeyBinding(GLFW_KEY_W, KeyActions::FORWARD);
+    camera.AddKeyBinding(GLFW_KEY_A, KeyActions::LEFT);
+    camera.AddKeyBinding(GLFW_KEY_S, KeyActions::BACKWARD);
+    camera.AddKeyBinding(GLFW_KEY_D, KeyActions::RIGHT);
+    camera.AddKeyBinding(GLFW_KEY_F11, KeyActions::FULLSCREEN);
+    camera.AddMouseBinding(0, MouseActions::LOOKAROUND);
+    camera.AddScrollBinding(0, ScrollActions::ZOOM);
+
+    std::vector<float> cubeVertices = {
+        // back face        
+        -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+         1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+         1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f, // bottom-right         
+         1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+        -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+        -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f, // top-left
+        // front face
+        -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+         1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 0.0f, // bottom-right
+         1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+         1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+        -1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 1.0f, // top-left
+        -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+        // left face
+        -1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+        -1.0f,  1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-left
+        -1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+        -1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+        -1.0f, -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+        -1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+        // right face
+         1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+         1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+         1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-right         
+         1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+         1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+         1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-left     
+         // bottom face
+         -1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+          1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f, // top-left
+          1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+          1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+         -1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+         -1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+         // top face
+         -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+          1.0f,  1.0f , 1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+          1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f, // top-right     
+          1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+         -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+         -1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f  // bottom-left        
+    };
+
+    VertexLayout cubeVerticesLayout;
+    cubeVerticesLayout.AddVec3(0);
+    cubeVerticesLayout.AddVec3(1);
+    cubeVerticesLayout.AddVec2(2);
+
+    Mesh cube(cubeVertices, cubeVerticesLayout);
+
+    glm::vec3 pos1(-1.0f, -1.0f, 0.0f); // 0 & 1 & 2, 0 & 2 & 3
+    glm::vec3 pos2(-1.0f, 1.0f, 0.0f);
+    glm::vec3 pos3(1.0f, 1.0f, 0.0f);
+    glm::vec3 pos4(1.0f, -1.0f, 0.0f);
+
+    glm::vec3 norm(0.0f, 0.0f, 1.0f);
+
+    glm::vec2 uv1(0.0f, 0.0f);
+    glm::vec2 uv2(0.0f, 1.0f);
+    glm::vec2 uv3(1.0f, 1.0f);
+    glm::vec2 uv4(1.0f, 0.0f);
+
+    //first triangle
+
+    glm::vec3 tangent1;
+    glm::vec3 bitangent1;
+
+    glm::vec3 edge1 = pos2 - pos1;
+    glm::vec3 edge2 = pos3 - pos1;
+
+    glm::vec2 dUV1 = uv2 - uv1;
+    glm::vec2 dUV2 = uv3 - uv1;
+
+    float f = (1.0f / (dUV1.x * dUV2.y - dUV2.x * dUV1.y));
+
+    tangent1.x = f * (edge1.x * dUV2.y - edge2.x * dUV1.y);
+    tangent1.y = f * (edge1.y * dUV2.y - edge2.y * dUV1.y);
+    tangent1.z = f * (edge1.z * dUV2.y - edge2.z * dUV1.y);
+
+    bitangent1.x = f * (edge1.x * (-dUV2.x) + edge2.x * dUV1.x);
+    bitangent1.y = f * (edge1.y * (-dUV2.x) + edge2.y * dUV1.x);
+    bitangent1.z = f * (edge1.z * (-dUV2.x) + edge2.z * dUV1.x);
+
+    //second triangle
+
+    glm::vec3 tangent2;
+    glm::vec3 bitangent2;
+
+    edge1 = pos3 - pos1;
+    edge2 = pos4 - pos1;
+
+    dUV1 = uv3 - uv1;
+    dUV2 = uv4 - uv1;
+
+    f = (1.0f / (dUV1.x * dUV2.y - dUV2.x * dUV1.y));
+
+    tangent2.x = f * (edge1.x * dUV2.y - edge2.x * dUV1.y);
+    tangent2.y = f * (edge1.y * dUV2.y - edge2.y * dUV1.y);
+    tangent2.z = f * (edge1.z * dUV2.y - edge2.z * dUV1.y);
+
+    bitangent2.x = f * (edge1.x * (-dUV2.x) + edge2.x * dUV1.x);
+    bitangent2.y = f * (edge1.y * (-dUV2.x) + edge2.y * dUV1.x);
+    bitangent2.z = f * (edge1.z * (-dUV2.x) + edge2.z * dUV1.x);
+
+    std::vector<float> vertices = {
+        pos1.x, pos1.y, pos1.z, norm.x, norm.y, norm.z, uv1.x, uv1.y, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
+        pos2.x, pos2.y, pos2.z, norm.x, norm.y, norm.z, uv2.x, uv2.y, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
+        pos3.x, pos3.y, pos3.z, norm.x, norm.y, norm.z, uv3.x, uv3.y, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
+        pos1.x, pos1.y, pos1.z, norm.x, norm.y, norm.z, uv1.x, uv1.y, tangent2.x, tangent2.y, tangent2.z, bitangent2.x, bitangent2.y, bitangent2.z,
+        pos3.x, pos3.y, pos3.z, norm.x, norm.y, norm.z, uv3.x, uv3.y, tangent2.x, tangent2.y, tangent2.z, bitangent2.x, bitangent2.y, bitangent2.z,
+        pos4.x, pos4.y, pos4.z, norm.x, norm.y, norm.z, uv4.x, uv4.y, tangent2.x, tangent2.y, tangent2.z, bitangent2.x, bitangent2.y, bitangent2.z,
+    };
+
+    VertexLayout layout;
+    layout.AddVec3(0);
+    layout.AddVec3(1);
+    layout.AddVec2(2);
+    layout.AddVec3(3);
+    layout.AddVec3(4);
+
+    Texture diffTex(fileSys.GetExecutableDirPath() + "\\res\\textures\\wood.png", "texture_diffuse", GL_CLAMP_TO_EDGE, false);
+    Texture normTex(fileSys.GetExecutableDirPath() + "\\res\\textures\\toy_box_normal.png", "texture_normal", GL_CLAMP_TO_EDGE, false);
+    Texture dispTex(fileSys.GetExecutableDirPath() + "\\res\\textures\\toy_box_displacement.png", "texture_displacement", GL_CLAMP_TO_EDGE, false);
+
+    std::vector<Texture> textures = { diffTex, normTex, dispTex };
+
+    Mesh plane(vertices, textures, layout);
+
+    glm::vec3 lightPos(0.5f, 0.5f, 0.5f);
+
+    Shader brickwallProgram(fileSys.GetExecutableDirPath() + "\\res\\shaders\\brickwallnormalparallaxmapped.shader");
+    brickwallProgram.SetUniformVec3f("uLightPos", lightPos);
+    brickwallProgram.SetUniform1f("uMaterial.shininess", 16.0f);
+    Shader lightCube(fileSys.GetExecutableDirPath() + "\\res\\shaders\\minsun.shader");
+
+    while (!Window::WindowShouldClose() && !m_ForcedEnd)
+    {
+        Window::WindowProcessInput(camera);
+
+        timer.UpdateDelta();
+        timer.UpdateFPS();
+
+        Window::SetDeltaTime(timer.GetDeltaTime());
+        Window::SetWindowTitle("FlyEngine : -)    FPS: " + timer.GetStringFPS());
+
+        Window::Clear(0.0f, 0.0f, 0.0f, 1.0f, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), static_cast<float>(Window::GetWidth()) / static_cast<float>(Window::GetHeight()), 0.1f, 100.0f);
+        glm::mat4 view = camera.GetViewMatrix();
+        glm::mat4 model = glm::mat4(1);
+
+        //model = glm::rotate(model, glm::radians(static_cast<float>(glfwGetTime()) * -10.0f), glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f)));
+
+        brickwallProgram.Bind();
+        brickwallProgram.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
+        brickwallProgram.SetUniformMat4f("uModel", model);
+        brickwallProgram.SetUniformMat4f("uMVP", projection * view * model);
+        brickwallProgram.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
+        brickwallProgram.SetUniform1f("uHeightScale", 0.1f);
+
+        plane.Draw(brickwallProgram);
+
+        model = glm::mat4(1);
+        model = glm::translate(model, lightPos);
+        model = glm::scale(model, glm::vec3(0.05f));
+
+        lightCube.Bind();
+        lightCube.SetUniformMat4f("uMVP", projection * view * model);
+
+        cube.Draw(lightCube);
+
+        Window::SwapBuffers();
+        Window::PollEvents();
+    }
+
+    Window::Destroy();
+    Window::TerminateGLFW();
+
     return true;
 }
 
 bool Scene::RenderScene14(HWND hText)
 {
     using namespace feng;
+
+    m_ForcedEnd = false;
+    Log::SetHandleTextBox(hText);
+
+    Window::Initialize(1600, 1100, "FlyEngine :-)", false, 4, 3, GLFW_OPENGL_CORE_PROFILE, true, 0.03f);
+
+    if (!Window::ValidateWindow())
+        return false;
+
+    FileSystem fileSys;
+
+    Timer timer;
+
+    Camera camera(0.0f, 0.0f, 6.0f);
+
+    camera.AddKeyBinding(GLFW_KEY_ESCAPE, KeyActions::EXIT);
+    camera.AddKeyBinding(GLFW_KEY_W, KeyActions::FORWARD);
+    camera.AddKeyBinding(GLFW_KEY_A, KeyActions::LEFT);
+    camera.AddKeyBinding(GLFW_KEY_S, KeyActions::BACKWARD);
+    camera.AddKeyBinding(GLFW_KEY_D, KeyActions::RIGHT);
+    camera.AddKeyBinding(GLFW_KEY_F11, KeyActions::FULLSCREEN);
+    camera.AddMouseBinding(0, MouseActions::LOOKAROUND);
+    camera.AddScrollBinding(0, ScrollActions::ZOOM);
+
+    std::vector<float> cubeVertices = {
+        // back face        
+        -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+         1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+         1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f, // bottom-right         
+         1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+        -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+        -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f, // top-left
+        // front face
+        -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+         1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 0.0f, // bottom-right
+         1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+         1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+        -1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 1.0f, // top-left
+        -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+        // left face
+        -1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+        -1.0f,  1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-left
+        -1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+        -1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+        -1.0f, -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+        -1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+        // right face
+         1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+         1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+         1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-right         
+         1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+         1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+         1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-left     
+         // bottom face
+         -1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+          1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f, // top-left
+          1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+          1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+         -1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+         -1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+         // top face
+         -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+          1.0f,  1.0f , 1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+          1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f, // top-right     
+          1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+         -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+         -1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f  // bottom-left        
+    };
+
+    VertexLayout cubeVerticesLayout;
+    cubeVerticesLayout.AddVec3(0);
+    cubeVerticesLayout.AddVec3(1);
+    cubeVerticesLayout.AddVec2(2);
+
+    Mesh cube(cubeVertices, cubeVerticesLayout);
+
+    glm::vec3 pos1(-1.0f, -1.0f, 0.0f); // 0 & 1 & 2, 0 & 2 & 3
+    glm::vec3 pos2(-1.0f, 1.0f, 0.0f);
+    glm::vec3 pos3(1.0f, 1.0f, 0.0f);
+    glm::vec3 pos4(1.0f, -1.0f, 0.0f);
+
+    glm::vec3 norm(0.0f, 0.0f, 1.0f);
+
+    glm::vec2 uv1(0.0f, 0.0f);
+    glm::vec2 uv2(0.0f, 1.0f);
+    glm::vec2 uv3(1.0f, 1.0f);
+    glm::vec2 uv4(1.0f, 0.0f);
+
+    //first triangle
+
+    glm::vec3 tangent1;
+    glm::vec3 bitangent1;
+
+    glm::vec3 edge1 = pos2 - pos1;
+    glm::vec3 edge2 = pos3 - pos1;
+
+    glm::vec2 dUV1 = uv2 - uv1;
+    glm::vec2 dUV2 = uv3 - uv1;
+
+    float f = (1.0f / (dUV1.x * dUV2.y - dUV2.x * dUV1.y));
+
+    tangent1.x = f * (edge1.x * dUV2.y - edge2.x * dUV1.y);
+    tangent1.y = f * (edge1.y * dUV2.y - edge2.y * dUV1.y);
+    tangent1.z = f * (edge1.z * dUV2.y - edge2.z * dUV1.y);
+
+    bitangent1.x = f * (edge1.x * (-dUV2.x) + edge2.x * dUV1.x);
+    bitangent1.y = f * (edge1.y * (-dUV2.x) + edge2.y * dUV1.x);
+    bitangent1.z = f * (edge1.z * (-dUV2.x) + edge2.z * dUV1.x);
+
+    //second triangle
+
+    glm::vec3 tangent2;
+    glm::vec3 bitangent2;
+
+    edge1 = pos3 - pos1;
+    edge2 = pos4 - pos1;
+
+    dUV1 = uv3 - uv1;
+    dUV2 = uv4 - uv1;
+
+    f = (1.0f / (dUV1.x * dUV2.y - dUV2.x * dUV1.y));
+
+    tangent2.x = f * (edge1.x * dUV2.y - edge2.x * dUV1.y);
+    tangent2.y = f * (edge1.y * dUV2.y - edge2.y * dUV1.y);
+    tangent2.z = f * (edge1.z * dUV2.y - edge2.z * dUV1.y);
+
+    bitangent2.x = f * (edge1.x * (-dUV2.x) + edge2.x * dUV1.x);
+    bitangent2.y = f * (edge1.y * (-dUV2.x) + edge2.y * dUV1.x);
+    bitangent2.z = f * (edge1.z * (-dUV2.x) + edge2.z * dUV1.x);
+
+    std::vector<float> vertices = {
+        pos1.x, pos1.y, pos1.z, norm.x, norm.y, norm.z, uv1.x, uv1.y, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
+        pos2.x, pos2.y, pos2.z, norm.x, norm.y, norm.z, uv2.x, uv2.y, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
+        pos3.x, pos3.y, pos3.z, norm.x, norm.y, norm.z, uv3.x, uv3.y, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
+        pos1.x, pos1.y, pos1.z, norm.x, norm.y, norm.z, uv1.x, uv1.y, tangent2.x, tangent2.y, tangent2.z, bitangent2.x, bitangent2.y, bitangent2.z,
+        pos3.x, pos3.y, pos3.z, norm.x, norm.y, norm.z, uv3.x, uv3.y, tangent2.x, tangent2.y, tangent2.z, bitangent2.x, bitangent2.y, bitangent2.z,
+        pos4.x, pos4.y, pos4.z, norm.x, norm.y, norm.z, uv4.x, uv4.y, tangent2.x, tangent2.y, tangent2.z, bitangent2.x, bitangent2.y, bitangent2.z,
+    };
+
+    VertexLayout layout;
+    layout.AddVec3(0);
+    layout.AddVec3(1);
+    layout.AddVec2(2);
+    layout.AddVec3(3);
+    layout.AddVec3(4);
+
+    Texture diffTex(fileSys.GetExecutableDirPath() + "\\res\\textures\\brick_diffuse.png", "texture_diffuse", GL_CLAMP_TO_EDGE);
+    Texture normTex(fileSys.GetExecutableDirPath() + "\\res\\textures\\brick_normal.png", "texture_normal", GL_CLAMP_TO_EDGE);
+    Texture dispTex(fileSys.GetExecutableDirPath() + "\\res\\textures\\brick_diffuse.png", "texture_displacement", GL_CLAMP_TO_EDGE);
+
+    std::vector<Texture> textures = { diffTex, normTex, dispTex };
+
+    Mesh plane(vertices, textures, layout);
+
+    glm::vec3 lightPos(0.5f, 0.5f, 0.5f);
+
+    Shader brickwallProgram(fileSys.GetExecutableDirPath() + "\\res\\shaders\\brickwallnormalparallaxmappedinv.shader");
+    //Shader brickwallProgram(fileSys.GetExecutableDirPath() + "\\res\\shaders\\brickwallnormalmapped.shader");
+    brickwallProgram.SetUniformVec3f("uLightPos", lightPos);
+    brickwallProgram.SetUniform1f("uMaterial.shininess", 16.0f);
+    Shader lightCube(fileSys.GetExecutableDirPath() + "\\res\\shaders\\minsun.shader");
+
+    while (!Window::WindowShouldClose() && !m_ForcedEnd)
+    {
+        Window::WindowProcessInput(camera);
+
+        timer.UpdateDelta();
+        timer.UpdateFPS();
+
+        Window::SetDeltaTime(timer.GetDeltaTime());
+        Window::SetWindowTitle("FlyEngine : -)    FPS: " + timer.GetStringFPS());
+
+        Window::Clear(0.0f, 0.0f, 0.0f, 1.0f, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), static_cast<float>(Window::GetWidth()) / static_cast<float>(Window::GetHeight()), 0.1f, 100.0f);
+        glm::mat4 view = camera.GetViewMatrix();
+        glm::mat4 model = glm::mat4(1);
+
+        //model = glm::rotate(model, glm::radians(static_cast<float>(glfwGetTime()) * -10.0f), glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f)));
+
+        brickwallProgram.Bind();
+        brickwallProgram.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
+        brickwallProgram.SetUniformMat4f("uModel", model);
+        brickwallProgram.SetUniformMat4f("uMVP", projection * view * model);
+        brickwallProgram.SetUniformMat3f("uTranInvModel", glm::transpose(glm::inverse(glm::mat3(model))));
+        brickwallProgram.SetUniform1f("uHeightScale", 0.05f);
+
+        plane.Draw(brickwallProgram);
+
+        model = glm::mat4(1);
+        model = glm::translate(model, lightPos);
+        model = glm::scale(model, glm::vec3(0.05f));
+
+        lightCube.Bind();
+        lightCube.SetUniformMat4f("uMVP", projection * view * model);
+
+        cube.Draw(lightCube);
+
+        Window::SwapBuffers();
+        Window::PollEvents();
+    }
+
+    Window::Destroy();
+    Window::TerminateGLFW();
 
     return true;
 }
@@ -2531,12 +2996,367 @@ bool Scene::RenderScene15(HWND hText)
 {
     using namespace feng;
 
+    m_ForcedEnd = false;
+    Log::SetHandleTextBox(hText);
+
+    Window::Initialize(1600, 1100, "FlyEngine :-)", false, 4, 3, GLFW_OPENGL_CORE_PROFILE, true, 0.03f);
+
+    if (!Window::ValidateWindow())
+        return false;
+
+    FileSystem fileSys;
+
+    Timer timer;
+
+    Camera camera(glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, -270.0f, 5.0f, 45.0f);
+
+    camera.AddKeyBinding(GLFW_KEY_ESCAPE, KeyActions::EXIT);
+    camera.AddKeyBinding(GLFW_KEY_W, KeyActions::FORWARD);
+    camera.AddKeyBinding(GLFW_KEY_A, KeyActions::LEFT);
+    camera.AddKeyBinding(GLFW_KEY_S, KeyActions::BACKWARD);
+    camera.AddKeyBinding(GLFW_KEY_D, KeyActions::RIGHT);
+    camera.AddKeyBinding(GLFW_KEY_F11, KeyActions::FULLSCREEN);
+    camera.AddMouseBinding(0, MouseActions::LOOKAROUND);
+    camera.AddScrollBinding(0, ScrollActions::ZOOM);
+    
+    std::vector<float> cubeVertices = {
+        // back face        
+        -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+         1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+         1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f, // bottom-right         
+         1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+        -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+        -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f, // top-left
+        // front face
+        -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+         1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 0.0f, // bottom-right
+         1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+         1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+        -1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 1.0f, // top-left
+        -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+        // left face
+        -1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+        -1.0f,  1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-left
+        -1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+        -1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+        -1.0f, -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+        -1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+        // right face
+         1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+         1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+         1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-right         
+         1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+         1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+         1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-left     
+         // bottom face
+         -1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+          1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f, // top-left
+          1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+          1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+         -1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+         -1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+         // top face
+         -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+          1.0f,  1.0f , 1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+          1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f, // top-right     
+          1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+         -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+         -1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f  // bottom-left        
+    };
+
+    VertexLayout cubeVerticesLayout;
+    cubeVerticesLayout.AddVec3(0);
+    cubeVerticesLayout.AddVec3(1);
+    cubeVerticesLayout.AddVec2(2);
+
+    Texture planeTexture(fileSys.GetExecutableDirPath() + "\\res\\textures\\wood.png", "texture_diffuse", GL_REPEAT);
+    std::vector<Texture> planeVecTexture = { planeTexture };
+
+    Mesh cube(cubeVertices, planeVecTexture, cubeVerticesLayout);
+
+    VertexLayout screenRectangleVerticesLayout;
+    screenRectangleVerticesLayout.AddVec2(0);
+    screenRectangleVerticesLayout.AddVec2(1);
+
+    std::vector<float> screenRectangleVertices = {
+        1.0f, 1.0f, 1.0f, 1.0f, // top right
+        -1.0f, 1.0f, 0.0f, 1.0f, //top left
+        -1.0f, -1.0f, 0.0f, 0.0f, //bottom left
+        1.0f, -1.0f, 1.0f, 0.0f //bottom right
+    };
+
+    std::vector<uint32_t> screenRectangleIndices = {
+        2, 1, 0,
+        3, 2, 0
+    };
+
+    VBO screenVBO(screenRectangleVertices);
+    IBO screenIBO(screenRectangleIndices);
+    FrameBuffer screenFB(screenVBO, screenIBO, screenRectangleVerticesLayout);
+    
+    std::array<glm::vec3, 4> lightPos = {
+        glm::vec3(0.0f, 0.0f, 49.5f),
+        glm::vec3(-1.4f, -1.9f, 9.0f),
+        glm::vec3(0.0f, -1.8f, 4.0f),
+        glm::vec3(0.8f, -1.7f, 6.0f)
+    };
+    std::array<glm::vec3, 4> lightColor = { 
+        glm::vec3(100.0f, 100.0f, 100.0f), 
+        glm::vec3(0.1f, 0.0f, 0.0f), 
+        glm::vec3(0.0f, 0.0f, 0.2f), 
+        glm::vec3(0.0f, 0.1f, 0.0f) 
+    };
+
+    Shader sourceLighting(fileSys.GetExecutableDirPath() + "\\res\\shaders\\blinnphonglighting.shader");
+   
+    for (uint32_t i = 0; i < 4; i++)
+    {
+        sourceLighting.SetUniformVec3f("uPointLight[" + std::to_string(i) + "].position", lightPos[i]);
+        sourceLighting.SetUniformVec3f("uPointLight[" + std::to_string(i) + "].ambient", glm::vec3(0.0f));
+        sourceLighting.SetUniformVec3f("uPointLight[" + std::to_string(i) + "].diffuse", lightColor[i]);
+        sourceLighting.SetUniformVec3f("uPointLight[" + std::to_string(i) + "].specular", lightColor[i]);
+        sourceLighting.SetUniform1f("uPointLight[" + std::to_string(i) + "].constant", 0.0f);
+        sourceLighting.SetUniform1f("uPointLight[" + std::to_string(i) + "].linear", 0.0f);
+        sourceLighting.SetUniform1f("uPointLight[" + std::to_string(i) + "].quadratic", 1.0f);
+    }
+    sourceLighting.SetUniform1f("uMaterial.shininess", 4.0f);
+
+    Shader toneMapping(fileSys.GetExecutableDirPath() + "\\res\\shaders\\reinhardtonemap.shader");
+    //Shader toneMapping(fileSys.GetExecutableDirPath() + "\\res\\shaders\\exposuretonemap.shader");
+    toneMapping.SetUniform1i("uScreenTexture", 0);
+    //toneMapping.SetUniform1f("uExposure", 5.0f);
+
+    Window::EnableFaceCulling();
+    Window::SetCWFaceCulling();
+
+    while (!Window::WindowShouldClose() && !m_ForcedEnd)
+    {
+        Window::WindowProcessInput(camera);
+
+        if (Window::QueryResized())
+            screenFB.Update();
+
+        timer.UpdateDelta();
+        timer.UpdateFPS();
+
+        Window::SetDeltaTime(timer.GetDeltaTime());
+        Window::SetWindowTitle("FlyEngine : -)    FPS: " + timer.GetStringFPS());
+
+        screenFB.Bind();
+
+        Window::Clear(0.0f, 0.0f, 0.0f, 1.0f, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), static_cast<float>(Window::GetWidth()) / static_cast<float>(Window::GetHeight()), 0.1f, 100.0f);
+        glm::mat4 view = camera.GetViewMatrix();
+        glm::mat4 model = glm::mat4(1);
+
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 25.0f));
+        model = glm::scale(model, glm::vec3(2.5f, 2.5f, 27.5f));
+
+        sourceLighting.Bind();
+        sourceLighting.SetUniformMat4f("uMVP", projection * view * model);
+        sourceLighting.SetUniformMat4f("uModel", model);
+        sourceLighting.SetUniformMat3f("uTranInvModel", -glm::transpose(glm::inverse(glm::mat3(model))));
+        sourceLighting.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
+
+        cube.Draw(sourceLighting);
+
+        screenFB.Draw(toneMapping);
+
+        Window::SwapBuffers();
+        Window::PollEvents();
+    }
+
+    Window::Destroy();
+    Window::TerminateGLFW();
+
     return true;
 }
 
 bool Scene::RenderScene16(HWND hText)
 {
     using namespace feng;
+
+    m_ForcedEnd = false;
+    Log::SetHandleTextBox(hText);
+
+    Window::Initialize(1600, 1100, "FlyEngine :-)", false, 4, 3, GLFW_OPENGL_CORE_PROFILE, true, 0.03f);
+
+    if (!Window::ValidateWindow())
+        return false;
+
+    FileSystem fileSys;
+
+    Timer timer;
+
+    Camera camera(glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, -270.0f, 5.0f, 45.0f);
+
+    camera.AddKeyBinding(GLFW_KEY_ESCAPE, KeyActions::EXIT);
+    camera.AddKeyBinding(GLFW_KEY_W, KeyActions::FORWARD);
+    camera.AddKeyBinding(GLFW_KEY_A, KeyActions::LEFT);
+    camera.AddKeyBinding(GLFW_KEY_S, KeyActions::BACKWARD);
+    camera.AddKeyBinding(GLFW_KEY_D, KeyActions::RIGHT);
+    camera.AddKeyBinding(GLFW_KEY_F11, KeyActions::FULLSCREEN);
+    camera.AddMouseBinding(0, MouseActions::LOOKAROUND);
+    camera.AddScrollBinding(0, ScrollActions::ZOOM);
+
+    std::vector<float> cubeVertices = {
+        // back face        
+        -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+         1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+         1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f, // bottom-right         
+         1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+        -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+        -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f, // top-left
+        // front face
+        -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+         1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 0.0f, // bottom-right
+         1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+         1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+        -1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 1.0f, // top-left
+        -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+        // left face
+        -1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+        -1.0f,  1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-left
+        -1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+        -1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+        -1.0f, -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+        -1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+        // right face
+         1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+         1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+         1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-right         
+         1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+         1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+         1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-left     
+         // bottom face
+         -1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+          1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f, // top-left
+          1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+          1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+         -1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+         -1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+         // top face
+         -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+          1.0f,  1.0f , 1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+          1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f, // top-right     
+          1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+         -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+         -1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f  // bottom-left        
+    };
+
+    VertexLayout cubeVerticesLayout;
+    cubeVerticesLayout.AddVec3(0);
+    cubeVerticesLayout.AddVec3(1);
+    cubeVerticesLayout.AddVec2(2);
+
+    Texture planeTexture(fileSys.GetExecutableDirPath() + "\\res\\textures\\wood.png", "texture_diffuse", GL_REPEAT);
+    std::vector<Texture> planeVecTexture = { planeTexture };
+
+    Mesh cube(cubeVertices, planeVecTexture, cubeVerticesLayout);
+
+    VertexLayout screenRectangleVerticesLayout;
+    screenRectangleVerticesLayout.AddVec2(0);
+    screenRectangleVerticesLayout.AddVec2(1);
+
+    std::vector<float> screenRectangleVertices = {
+        1.0f, 1.0f, 1.0f, 1.0f, // top right
+        -1.0f, 1.0f, 0.0f, 1.0f, //top left
+        -1.0f, -1.0f, 0.0f, 0.0f, //bottom left
+        1.0f, -1.0f, 1.0f, 0.0f //bottom right
+    };
+
+    std::vector<uint32_t> screenRectangleIndices = {
+        2, 1, 0,
+        3, 2, 0
+    };
+
+    VBO screenVBO(screenRectangleVertices);
+    IBO screenIBO(screenRectangleIndices);
+    FrameBuffer screenFB(screenVBO, screenIBO, screenRectangleVerticesLayout);
+
+    std::array<glm::vec3, 4> lightPos = {
+        glm::vec3(0.0f, 0.0f, 49.5f),
+        glm::vec3(-1.4f, -1.9f, 9.0f),
+        glm::vec3(0.0f, -1.8f, 4.0f),
+        glm::vec3(0.8f, -1.7f, 6.0f)
+    };
+    std::array<glm::vec3, 4> lightColor = {
+        glm::vec3(100.0f, 100.0f, 100.0f),
+        glm::vec3(0.1f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 0.0f, 0.2f),
+        glm::vec3(0.0f, 0.1f, 0.0f)
+    };
+
+    Shader sourceLighting(fileSys.GetExecutableDirPath() + "\\res\\shaders\\blinnphonglighting.shader");
+
+    for (uint32_t i = 0; i < 4; i++)
+    {
+        sourceLighting.SetUniformVec3f("uPointLight[" + std::to_string(i) + "].position", lightPos[i]);
+        sourceLighting.SetUniformVec3f("uPointLight[" + std::to_string(i) + "].ambient", glm::vec3(0.0f));
+        sourceLighting.SetUniformVec3f("uPointLight[" + std::to_string(i) + "].diffuse", lightColor[i]);
+        sourceLighting.SetUniformVec3f("uPointLight[" + std::to_string(i) + "].specular", lightColor[i]);
+        sourceLighting.SetUniform1f("uPointLight[" + std::to_string(i) + "].constant", 0.0f);
+        sourceLighting.SetUniform1f("uPointLight[" + std::to_string(i) + "].linear", 0.0f);
+        sourceLighting.SetUniform1f("uPointLight[" + std::to_string(i) + "].quadratic", 1.0f);
+    }
+    sourceLighting.SetUniform1f("uMaterial.shininess", 4.0f);
+
+    //Shader toneMapping(fileSys.GetExecutableDirPath() + "\\res\\shaders\\reinhardtonemap.shader");
+    Shader toneMapping(fileSys.GetExecutableDirPath() + "\\res\\shaders\\exposuretonemap.shader");
+    toneMapping.SetUniform1i("uScreenTexture", 0);
+    toneMapping.SetUniform1f("uExposure", 1.0f);
+        
+    float exposureFactor = 1.0f;
+    float exposureAdjustmentSpeed = 0.05f;
+    
+
+    Window::EnableFaceCulling();
+    Window::SetCWFaceCulling();
+
+    while (!Window::WindowShouldClose() && !m_ForcedEnd)
+    {
+        Window::WindowProcessInput(camera);
+
+        if (Window::QueryResized())
+            screenFB.Update();
+
+        timer.UpdateDelta();
+        timer.UpdateFPS();
+
+        Window::SetDeltaTime(timer.GetDeltaTime());
+        Window::SetWindowTitle("FlyEngine : -)    FPS: " + timer.GetStringFPS());
+
+        screenFB.Bind();
+
+        Window::Clear(0.0f, 0.0f, 0.0f, 1.0f, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), static_cast<float>(Window::GetWidth()) / static_cast<float>(Window::GetHeight()), 0.1f, 100.0f);
+        glm::mat4 view = camera.GetViewMatrix();
+        glm::mat4 model = glm::mat4(1);
+
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 25.0f));
+        model = glm::scale(model, glm::vec3(2.5f, 2.5f, 27.5f));
+
+        sourceLighting.Bind();
+        sourceLighting.SetUniformMat4f("uMVP", projection * view * model);
+        sourceLighting.SetUniformMat4f("uModel", model);
+        sourceLighting.SetUniformMat3f("uTranInvModel", -glm::transpose(glm::inverse(glm::mat3(model))));
+        sourceLighting.SetUniformVec3f("uViewPos", camera.GetCameraPosition());
+
+        cube.Draw(sourceLighting);
+
+        toneMapping.Bind();
+        toneMapping.SetUniform1f("uExposure", screenFB.GetExposure(exposureFactor, 0.1f, 10.0f, 0.01f));
+
+        screenFB.Draw(toneMapping);
+
+        Window::SwapBuffers();
+        Window::PollEvents();
+    }
+
+    Window::Destroy();
+    Window::TerminateGLFW();
 
     return true;
 }

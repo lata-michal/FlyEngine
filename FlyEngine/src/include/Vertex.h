@@ -8,17 +8,22 @@ namespace feng {
         glm::vec3 position;
         glm::vec3 normal;
         glm::vec2 texCoords;
+        glm::vec3 tangent;
+        glm::vec3 bitangent;
 
         Vertex() = default;
 
-        Vertex(float x, float y, float z, float xn, float yn, float zn, float u, float v)
-            : position(x, y, z), normal(xn, yn, zn), texCoords(u, v) { }
+        Vertex(float x, float y, float z, float xn, float yn, float zn, float u, float v, 
+            float xtan, float ytan, float ztan, float xbtan, float ybtan, float zbtan)
+            : position(x, y, z), normal(xn, yn, zn), texCoords(u, v), tangent(xtan, ytan, ztan), bitangent(xbtan, ybtan, zbtan) { }
 
-        Vertex(glm::vec3 position, glm::vec3 normal, glm::vec3 texCoords)
+        Vertex(glm::vec3 position, glm::vec3 normal, glm::vec2 texCoords, glm::vec3 tangent, glm::vec3 bitangent)
         {
             this->position = position;
             this->normal = normal;
             this->texCoords = texCoords;
+            this->tangent = tangent;
+            this->bitangent = bitangent;
         }
     };
     

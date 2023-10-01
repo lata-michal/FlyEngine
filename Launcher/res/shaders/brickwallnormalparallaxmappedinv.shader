@@ -59,27 +59,66 @@ struct Material
 {
     sampler2D texture_diffuse1;
     sampler2D texture_normal1;
+    sampler2D texture_displacement1;
 
     float shininess;
 };
 
 uniform Material uMaterial;
+uniform float uHeightScale;
+
+vec2 parallaxMapping(vec2 texCoordinate, vec3 viewDir)
+{
+    const float min = 8.0;
+    const float max = 64.0;
+    float numLayers = mix(max, min, abs(dot(vec3(0.0, 0.0, 1.0), viewDir)));
+
+    float layerDepth = 1.0 / numLayers;
+    float currentDepth = 0.0;
+
+    vec2 P = viewDir.xy / viewDir.z * uHeightScale;
+    vec2 deltaTexCoord = P / numLayers;
+
+    vec2 currentTexCord = texCoordinate;
+    float currentDispMapValue = 1.0 - texture(uMaterial.texture_displacement1, currentTexCord).r;
+
+    while(currentDepth < currentDispMapValue)
+    {
+        currentDepth += layerDepth;
+        currentTexCord -= deltaTexCoord;
+        currentDispMapValue = 1.0 - texture(uMaterial.texture_displacement1, currentTexCord).r;
+    }
+
+    vec2 prevTexCoord = currentTexCord + deltaTexCoord;
+
+    float beforeDepth = (1.0 - texture(uMaterial.texture_displacement1, prevTexCoord).r) - currentDepth + layerDepth;
+    float afterDepth = currentDispMapValue - currentDepth;
+
+    float weight = afterDepth / (afterDepth - beforeDepth);
+    vec2 finalTexCoords = prevTexCoord * weight + currentTexCord * (1.0 - weight);
+
+    return finalTexCoords;
+}
 
 void main()
 {
-    vec3 normal =  texture(uMaterial.texture_normal1, vs_in.texCoord).rgb;
-    normal = normalize(normal * 2.0 - 1.0);
-
-    vec3 color = texture(uMaterial.texture_diffuse1, vs_in.texCoord).rgb;
-
-    vec3 ambient = 0.05 * color;
-
     vec3 lightDir = normalize(vs_in.tangentLightPos - vs_in.tangentFragPos);
     vec3 viewDir = normalize(vs_in.tangentViewPos - vs_in.tangentFragPos);
     vec3 halfwayDir = normalize(lightDir + viewDir);
+
+    vec2 texCoord = parallaxMapping(vs_in.texCoord, viewDir);
+    if(texCoord.x > 1.0 || texCoord.y > 1.0 || texCoord.x < 0.0 || texCoord.y < 0.0)
+        discard;
+
+    vec3 normal =  texture(uMaterial.texture_normal1, texCoord).rgb;
+    normal = normalize(normal * 2.0 - 1.0);
+
+    vec3 color = texture(uMaterial.texture_diffuse1, texCoord).rgb;
+
+    vec3 ambient = 0.01 * color;
     
     float diff = max(dot(lightDir, normal), 0.0);
-    vec3 diffuse = diff * color;
+    vec3 diffuse = diff * color * 0.5;
 
     float spec = 0.0;
     if(diff > 0.0)
