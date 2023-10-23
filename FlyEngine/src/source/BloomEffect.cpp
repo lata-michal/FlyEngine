@@ -4,11 +4,11 @@
 
 using namespace feng;
 
-feng::BloomEffect::BloomEffect(const std::string& upscaleShaderPath, const std::string& downscaleShaderPath, float filterRadius, 
-	float applyBloomBrightnessThreshold, uint32_t nBloomMips)
-	: m_QuadVertices({1.0f, 1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, -1.0f, 1.0f, 0.0f }), 
-	m_QuadIndices({ 0, 1, 2, 0, 2, 3 }), m_UpscaleShader(upscaleShaderPath), m_DownscaleShader(downscaleShaderPath), 
-	m_FilterRadius(filterRadius), m_ApplyBloomBrightnessThreshold(applyBloomBrightnessThreshold), m_NumBloomMips(nBloomMips), m_Quad()
+feng::BloomEffect::BloomEffect(const std::string& upscaleShaderPath, const std::string& downscaleShaderPath, float bloomStrength, 
+	float filterRadius, float applyBloomBrightnessThreshold, uint32_t nBloomMips)
+	: m_QuadVertices({1.0f, 1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, -1.0f, 1.0f, 0.0f }), m_QuadIndices({ 0, 1, 2, 0, 2, 3 }),
+	m_UpscaleShader(upscaleShaderPath), m_DownscaleShader(downscaleShaderPath), m_BloomStrength(bloomStrength), m_FilterRadius(filterRadius), 
+	m_ApplyBloomBrightnessThreshold(applyBloomBrightnessThreshold), m_NumBloomMips(nBloomMips), m_Quad()
 {
 	m_QuadLayout.AddVec2(0);
 	m_QuadLayout.AddVec2(1);
@@ -155,6 +155,7 @@ void feng::BloomEffect::RenderSceneWBloom(Shader& shader)
 	shader.Bind();
 	shader.SetUniform1i("uSceneTex", 0);
 	shader.SetUniform1i("uBloomTex", 1);
+	shader.SetUniform1f("uBloomStrength", m_BloomStrength);
 
 	Window::DisableDepthTesting();
 	m_Quad.Draw(shader);

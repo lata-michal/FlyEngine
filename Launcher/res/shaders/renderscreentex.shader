@@ -23,14 +23,15 @@ uniform sampler2D uSceneTex;
 uniform sampler2D uBloomTex;
 
 uniform float uExposure;
+uniform float uBloomStrength;
 
 void main()
 {
     vec3 hdrColor = texture(uSceneTex, oTexCoord).rgb;
     vec3 bloomColor = texture(uBloomTex, oTexCoord).rgb;
 
-    hdrColor += bloomColor;
-    vec3 result = vec3(1.0) - exp(-hdrColor * uExposure);
+    vec3 color = mix(hdrColor, bloomColor, vec3(uBloomStrength));
+    vec3 result = vec3(1.0) - exp(-color * uExposure);
 
     fragmentColor = vec4(result, 1.0);
 }

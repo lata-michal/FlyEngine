@@ -3351,7 +3351,7 @@ bool Scene::RenderScene17(HWND hText)
     camera.AddScrollBinding(0, ScrollActions::ZOOM);
 
     BloomEffect bloomEff(fileSys.GetExecutableDirPath() + "\\res\\shaders\\upsample.shader",
-        fileSys.GetExecutableDirPath() + "\\res\\shaders\\downsample.shader", 0.005f);
+        fileSys.GetExecutableDirPath() + "\\res\\shaders\\downsample.shader", 0.04f, 0.005f);
 
     std::vector<float> cubeVertices = {
         // back face        

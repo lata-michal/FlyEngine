@@ -32,11 +32,12 @@ namespace feng {
 		uint32_t m_FrameBufferBloom;
 		std::vector<bloomMip> m_BloomMips;
 
+		float m_BloomStrength;
 		float m_FilterRadius;
 		float m_ApplyBloomBrightnessThreshold;
 		uint32_t m_NumBloomMips;
 	public:
-		BloomEffect(const std::string& upscaleShaderName, const std::string& downscaleShaderName,
+		BloomEffect(const std::string& upscaleShaderName, const std::string& downscaleShaderName, float bloomStrength,
 			float filterRadius, float applyBloomBrightnessThreshold = 1.0f, uint32_t nBloomMips = 5);
 		~BloomEffect();
 
