@@ -26,7 +26,7 @@ Mesh::Mesh(const std::vector<float>& vertices, const std::vector<uint32_t>& indi
     m_VAO.Setup(m_VBO, m_IBO, layout);
 }
 
-Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::vector<Texture>& textures, const std::vector<float>& instanceMatrix)
+Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::vector<Texture>& textures, const std::vector<glm::mat4>& instanceMatrix)
     : m_VAO(), m_VBO(vertices), m_IBO(indices), m_Textures(textures)
 {
     VertexLayout layout;
@@ -41,7 +41,7 @@ Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& ind
     if (!instanceMatrix.empty())
     {
         VBO instanceVBO(instanceMatrix);
-        instanceVBO.SetupInstanceVBOMat4(m_VAO.GetVAO(), 3, 1);
+        instanceVBO.SetupInstanceVBOMat4(m_VAO.GetVAO(), 5, 1);
     }
 }
 

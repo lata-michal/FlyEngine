@@ -40,25 +40,25 @@ namespace feng {
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 
-		void Bind()
+		void Bind() const
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, m_DepthMapFBO);
 		}
 
-		void BindTex(uint32_t texture_unit = 0)
+		void BindTex(uint32_t texture_unit = 0) const
 		{
 			glActiveTexture(GL_TEXTURE0 + texture_unit);
 			glBindTexture(GL_TEXTURE_CUBE_MAP, m_DepthCubeMapTex);
 		}
 
-		void Unbind()
+		void Unbind() const
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 
-		uint32_t GetTexWidth() const { return m_TexWidth; }
-		uint32_t GetTexHeight() const { return m_TexHeight; }
-		float GetAspectRatio() const { return static_cast<float>(GetTexWidth()) / static_cast<float>(GetTexHeight()); }
+		uint32_t GetTexWidth() const { return m_TexWidth; } const
+		uint32_t GetTexHeight() const { return m_TexHeight; } const
+		float GetAspectRatio() const { return static_cast<float>(GetTexWidth()) / static_cast<float>(GetTexHeight()); } 
 	};
 }
 

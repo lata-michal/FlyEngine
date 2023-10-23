@@ -2,7 +2,7 @@
 
 using namespace feng;
 
-Model::Model(const std::string& path, bool flipTex, const std::vector<float>& instanceMatrix)
+Model::Model(const std::string& path, bool flipTex, const std::vector<glm::mat4>& instanceMatrix)
 	: m_LoadModelPath(path), m_DirectoryPath(path.substr(0, path.find_last_of('\\'))), m_FlipTex(flipTex), m_InstanceMatrix(instanceMatrix) { }
 
 Model::~Model()

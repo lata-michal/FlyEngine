@@ -145,11 +145,11 @@ uint32_t Shader::CompileShader(uint32_t type, const std::string& source)
 		glGetShaderInfoLog(id, length, &length, message);
 
 		if(type == GL_VERTEX_SHADER)
-			Log::Print("FAILED TO COMPILE VERTEX SHADER!\n");
+			Log::Print("FAILED TO COMPILE VERTEX SHADER!\n" + m_FilePath + '\n');
 		else if(type == GL_GEOMETRY_SHADER)
-			Log::Print("FAILED TO COMPILE GEOMETRY SHADER!\n");
+			Log::Print("FAILED TO COMPILE GEOMETRY SHADER!\n" + m_FilePath + '\n');
 		else if(type == GL_FRAGMENT_SHADER)
-			Log::Print("FAILED TO COMPILE FRAGMENT SHADER!\n");
+			Log::Print("FAILED TO COMPILE FRAGMENT SHADER!\n" + m_FilePath + '\n');
 
 		Log::Print(message + '\n');
 

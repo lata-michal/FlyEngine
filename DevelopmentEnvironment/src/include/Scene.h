@@ -9,6 +9,7 @@
 #include "DepthMap.h"
 #include "DepthMapEx.h"
 #include "Skybox.h"
+#include "BloomEffect.h"
 
 #include "Log.h"
 
@@ -48,6 +49,8 @@ public:
 	static bool RenderScene15(HWND hText);
 
 	static bool RenderScene16(HWND hText);
+
+	static bool RenderScene17(HWND hText);
 
 	static void ForceEnd();
 };

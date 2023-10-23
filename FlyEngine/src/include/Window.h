@@ -18,6 +18,8 @@ namespace feng {
     class Window
     {
     public:
+        static std::unique_ptr<GLFWwindow, GLFWwindowDestroyer> m_Window;
+
         static KeyboardInput m_KeyboardInput;
         static MouseInput m_MouseInput;
         static std::unordered_set<uint32_t> m_ErrorSet;
@@ -61,6 +63,7 @@ namespace feng {
 
         static void EnableBlending() { glEnable(GL_BLEND); }
         static void SetBlendFunc(GLenum sfactor, GLenum dfactor) { glBlendFunc(sfactor, dfactor); }
+        static void SetBlendEquation(GLenum mode) { glBlendEquation(mode); }
         static void DisableBlending() { glDisable(GL_BLEND); }
 
         static void EnableStencilBuffer() { glEnable(GL_STENCIL_TEST); glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE); }
@@ -76,8 +79,6 @@ namespace feng {
         static void KeyCallback(GLFWwindow* window, int32_t key, int32_t scancode, int32_t action, int32_t mods);
         static void MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
     private:
-        static std::unique_ptr<GLFWwindow, GLFWwindowDestroyer> m_Window;
-
         static int32_t m_Width;
         static int32_t m_Height;
         static int32_t m_LastWidth;
