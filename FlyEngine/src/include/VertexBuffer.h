@@ -11,6 +11,8 @@ namespace feng {
 		uint32_t m_VBO;
 		uint32_t m_VerticesSize;
 	public:
+		VBO() = default;
+
 		VBO(const std::vector<Vertex>& vertices)
 			: m_VerticesSize(sizeof(Vertex) * vertices.size())
 		{
@@ -25,6 +27,14 @@ namespace feng {
 			glGenBuffers(1, &m_VBO);
 			glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
 			glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);;
+		}
+
+		VBO(const std::vector<glm::mat4>& vertices)
+			: m_VerticesSize(sizeof(glm::mat4) * vertices.size())
+		{
+			glGenBuffers(1, &m_VBO);
+			glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+			glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::mat4), vertices.data(), GL_STATIC_DRAW);;
 		}
 
 		void Bind() const { glBindBuffer(GL_ARRAY_BUFFER, m_VBO); }

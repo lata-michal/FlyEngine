@@ -45,6 +45,7 @@ static std::vector<std::wstring> avCommands = {
     L"-normal & parallax mapping 3",
     L"-HDR tone mapping test",
     L"-HDR tone mapping autoexposure",
+    L"-bloom feature test"
 };
 
 bool regexTextFind(const std::wstring& srcText, const std::wstring& text);
@@ -494,6 +495,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                         thScene.get()->join();
                         thScene.reset(new std::thread(Scene::RenderScene16, hText));
                         index = 12;
+                    }
+                    SetWindowText(hText, L"");
+                }
+                else if (regexTextFind(prevText, avCommands[13] + L"/"))
+                {
+                    if (!thScene)
+                    {
+                        thScene.reset(new std::thread(Scene::RenderScene17, hText));
+                        index = 13;
+                    }
+                    else
+                    {
+                        Scene::ForceEnd();
+                        thScene.get()->join();
+                        thScene.reset(new std::thread(Scene::RenderScene17, hText));
+                        index = 13;
                     }
                     SetWindowText(hText, L"");
                 }

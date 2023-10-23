@@ -13,9 +13,9 @@ namespace feng {
 		std::string m_DirectoryPath;
 		std::string m_LoadModelPath;
 		bool m_FlipTex;
-		std::vector<float> m_InstanceMatrix;
+		std::vector<glm::mat4> m_InstanceMatrix;
 	public:
-		Model(const std::string& path, bool flipTex = true, const std::vector<float>& instanceMatrix = {});
+		Model(const std::string& path, bool flipTex = true, const std::vector<glm::mat4>& instanceMatrix = {});
 		~Model();
 
 		void Load();

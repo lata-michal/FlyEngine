@@ -60,18 +60,18 @@ namespace feng {
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 
-		void Bind() 
+		void Bind() const
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, m_DepthMapFBO);
 		}
 
-		void BindTex(uint32_t texture_unit = 0)
+		void BindTex(uint32_t texture_unit = 0) const
 		{
 			glActiveTexture(GL_TEXTURE0 + texture_unit);
 			glBindTexture(GL_TEXTURE_2D, m_DepthMapTexture);
 		}
 
-		void Unbind()
+		void Unbind() const
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
