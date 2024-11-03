@@ -264,7 +264,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 }
 
                 std::wstring wmessage = prevText +
-                    L"\r\nCommand line mode.\r\nType your command between two slashes. Example: /any command/.\r\nAvailable commands : \r\nres\r\n";
+                    L"\r\nCommand line mode.\r\nType your command between two slashes. Example: /any command/.\r\nAvailable commands : \r\nreset\r\n";
 
                 for (auto& command : avCommands)
                     wmessage += (L"launch " + command + L"\r\n");
@@ -521,7 +521,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     SendMessage(hText, EM_LINESCROLL, 0, 3000000);
                 }
             }
-            else if (regexTextFind(prevText, L"/res/"))
+            else if (regexTextFind(prevText, L"/reset/"))
             {
                 SetWindowText(hText, std::wstring(L"/launch " + avCommands[index] + L"/").c_str());
                 SendMessage(hButtonExecution, BM_CLICK, 0, 0);
