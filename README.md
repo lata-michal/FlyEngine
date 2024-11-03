@@ -1,6 +1,6 @@
 # FlyEngine
 
-FFlyEngine is a lightweight C++ graphics engine designed for 3D rendering applications, offering foundational features such as shader management, texture handling, framebuffer effects, and interactive camera control. Built as a flexible and efficient framework, FlyEngine is ideal for developers aiming to create custom 3D applications, games, or any graphics-intensive projects. This engine serves as both a practical tool and a learning project, developed alongside the comprehensive exploration of OpenGL through Joey de Vries's [LearnOpenGL](https://learnopengl.com/) book. Many techniques implemented in FlyEngine were inspired by concepts covered in this resource, making it a hands-on application of OpenGL fundamentals and advanced techniques. 
+FlyEngine is a lightweight C++ graphics engine designed for 3D rendering applications, offering foundational features such as shader management, texture handling, framebuffer effects, and interactive camera control. Built as a flexible and efficient framework, FlyEngine is ideal for developers aiming to create custom 3D applications, games, or any graphics-intensive projects. This engine serves as both a practical tool and a learning project, developed alongside the comprehensive exploration of OpenGL through Joey de Vries's [LearnOpenGL](https://learnopengl.com/) book. Many techniques implemented in FlyEngine were inspired by concepts covered in this resource, making it a hands-on application of OpenGL fundamentals and advanced techniques. 
 
 ## Features
 
@@ -62,11 +62,11 @@ The FlyEngine repository contains three main components, each serving a unique p
 
      ```
      $(SolutionDir)FlyEngine\src\include;
-     $(SolutionDir)FlyEngine\srcendor;
+     $(SolutionDir)FlyEngine\src\vendor;
      $(SolutionDir)Dependencies\GLFW\include\;
      $(SolutionDir)Dependencies\GLAD\include\;
-     $(SolutionDir)Dependencies\ASSIMPssimp-5.2.5\include;
-     $(SolutionDir)Dependencies\ASSIMPssimp-5.2.5\contrib
+     $(SolutionDir)Dependencies\ASSIMP\assimp-5.2.5\include;
+     $(SolutionDir)Dependencies\ASSIMP\assimp-5.2.5\contrib
      ```
 
 ## Getting Started
