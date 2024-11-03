@@ -3571,6 +3571,31 @@ bool Scene::RenderScene17(HWND hText)
     return true;
 }
 
+bool Scene::RenderScene18(HWND hText)
+{
+    return false;
+}
+
+bool Scene::RenderScene19(HWND hText)
+{
+    return false;
+}
+
+bool Scene::RenderScene20(HWND hText)
+{
+    return false;
+}
+
+bool Scene::RenderScene21(HWND hText)
+{
+    return false;
+}
+
+bool Scene::RenderScene22(HWND hText)
+{
+    return false;
+}
+
 void Scene::ForceEnd()
 {
     m_ForcedEnd = true;
