@@ -2,6 +2,10 @@
 
 FlyEngine is a lightweight C++ graphics engine designed for 3D rendering applications, offering foundational features such as shader management, texture handling, framebuffer effects, and interactive camera control. Built as a flexible and efficient framework, FlyEngine is ideal for developers aiming to create custom 3D applications, games, or any graphics-intensive projects. This engine serves as both a practical tool and a learning project, developed alongside the comprehensive exploration of OpenGL through Joey de Vries's [LearnOpenGL](https://learnopengl.com/) book. Many techniques implemented in FlyEngine were inspired by concepts covered in this resource, making it a hands-on application of OpenGL fundamentals and advanced techniques. 
 
+![Engine preview image](preview1.png)
+
+![Engine preview image](preview2.png)
+
 ## Features
 
 - **Shader Management**: Compile, manage, and use GLSL shaders for custom rendering.
@@ -29,7 +33,8 @@ The FlyEngine repository contains three main components, each serving a unique p
 
 2. **Development Environment**: A set of development and testing tools that demonstrate FlyEngine’s capabilities. This environment includes multiple pre-configured scenes showcasing various rendering techniques, shader effects, and visual styles. It serves as an internal testing ground for features, helping developers explore and validate FlyEngine’s functionalities.
 
-3. **Launcher**: An interface to easily run and interact with different scenes within the Development Environment. The Launcher allows for quick testing and experimentation by providing a user-friendly interface to load scenes, toggle developer logs, and execute basic commands.
+3. **Launcher**: An interface to easily run and interact with different scenes within the Development Environment. The Launcher allows for quick testing and experimentation by providing a user-friendly interface to load scenes, toggle developer logs, and execute basic commands. You can move the camera using **W, A, S, D** keys, look around with the **mouse movement**, zoom in and out using the **mouse scroll**, toggle fullscreen with **F11**, and exit the scene by pressing **Escape**. The Launcher serves as a convenient tool for exploring FlyEngine’s capabilities and experimenting with different rendering techniques in real-time.
+
 
 > **Note**: **FlyEngine** is the primary library intended for distribution and use in user applications. Development Environment and Launcher are designed for showcasing FlyEngine’s features and for testing purposes. Users interested in building their own 3D applications should focus on integrating the FlyEngine library into their projects.
 
@@ -37,12 +42,12 @@ The FlyEngine repository contains three main components, each serving a unique p
 
 ### Prerequisites
 
-- **C++ Compiler** (GCC, Clang, or Visual Studio)
-- **OpenGL**-compatible graphics card
-- **GLFW**: For window management and input handling
-- **GLAD**: For OpenGL function loading
-- **GLM**: For vector and matrix math operations
-- **Assimp**: For model loading
+To build and run FlyEngine, ensure that your system meets the following requirements:
+
+- **Visual Studio 2022**: Required for building the project.
+- **OpenGL-compatible graphics card**: For rendering graphics.
+
+> **Note**: All necessary libraries (GLFW, GLAD, GLM, Assimp) are included with the project and do not require separate installation.
 
 ### Building the Project
 
@@ -119,6 +124,8 @@ shader.SetUniform("uniformName", value);  // Example for setting uniforms
 ```
 
 ## Detailed Examples
+
+All the detailed examples demonstrating the full capabilities of FlyEngine are located in the `Scene.cpp` file within the DevelopmentEnvironment project. The examples there are comprehensive, valid, and fully functional, showcasing various advanced features of the engine. The examples included in this README below are simplified and designed to illustrate the basic workflow, providing a starting point for users to familiarize themselves with the engine.
 
 ### 1. Basic Scene with Model and Shader
 
