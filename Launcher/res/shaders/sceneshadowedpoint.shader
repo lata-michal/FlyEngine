@@ -39,7 +39,6 @@ in VS_OUT
 struct Material
 {
     sampler2D texture_diffuse1;
-
     float shininess;
 };
 
@@ -48,15 +47,14 @@ uniform samplerCube uDepthMap;
 
 uniform vec3 uLightPos;
 uniform vec3 uViewPos;
-
 uniform float uFarPlane;
 
 vec3 diskOffsetDirection[20] = vec3[](
-vec3( 1, 1, 1), vec3( 1, -1, 1), vec3(-1, -1, 1), vec3(-1, 1, 1),
-vec3( 1, 1, -1), vec3( 1, -1, -1), vec3(-1, -1, -1), vec3(-1, 1, -1),
-vec3( 1, 1, 0), vec3( 1, -1, 0), vec3(-1, -1, 0), vec3(-1, 1, 0),
-vec3( 1, 0, 1), vec3(-1, 0, 1), vec3( 1, 0, -1), vec3(-1, 0, -1),
-vec3( 0, 1, 1), vec3( 0, -1, 1), vec3( 0, -1, -1), vec3( 0, 1, -1)
+    vec3( 1, 1, 1), vec3( 1, -1, 1), vec3(-1, -1, 1), vec3(-1, 1, 1),
+    vec3( 1, 1, -1), vec3( 1, -1, -1), vec3(-1, -1, -1), vec3(-1, 1, -1),
+    vec3( 1, 1, 0), vec3( 1, -1, 0), vec3(-1, -1, 0), vec3(-1, 1, 0),
+    vec3( 1, 0, 1), vec3(-1, 0, 1), vec3( 1, 0, -1), vec3(-1, 0, -1),
+    vec3( 0, 1, 1), vec3( 0, -1, 1), vec3( 0, -1, -1), vec3( 0, 1, -1)
 );
 
 float ShadowCalc(vec3 fragPos)
@@ -74,8 +72,7 @@ float ShadowCalc(vec3 fragPos)
         float closestDepth = texture(uDepthMap, fragToLight + diskOffsetDirection[i] * diskRadius).r;
         closestDepth *= uFarPlane;
 
-        if(currentDepth - bias > closestDepth ? 1.0 : 0.0)
-            shadow += 1.0;
+        shadow += (currentDepth - bias > closestDepth) ? 1.0 : 0.0;
     }
 
     return shadow / 20.0;
@@ -102,8 +99,15 @@ void main()
     }
     vec3 specular = spec * lightColor;
 
+    float distance = length(uLightPos - vs_in.oFragPos);
+    float constant = 1.0;
+    float linear = 0.05;
+    float quadratic = 0.0005;
+    float attenuation = 1.0 / (constant + linear * distance + quadratic * (distance * distance));
+
     float shadow = ShadowCalc(vs_in.oFragPos);
-    vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * color; 
+
+    vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular) * attenuation) * color; 
 
     fragmentColor = vec4(lighting, 1.0);
 }

@@ -1,0 +1,15 @@
+# Material File
+
+newmtl initialShadingGroup
+Ka 1.000 1.000 1.000  # Ambient color
+Kd 1.000 1.000 1.000  # Diffuse color
+Ks 1.000 1.000 1.000  # Specular color
+Ns 225.0              # Shininess
+d 1.0                 # Opacity
+
+# Textures
+map_Kd initialShadingGroup_Base_Color.png
+map_Ke initialShadingGroup_Emissive.png
+map_Ns initialShadingGroup_Metallic.png
+norm initialShadingGroup_Normal_OpenGL.png
+map_d initialShadingGroup_Roughness.png
