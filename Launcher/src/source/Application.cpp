@@ -42,10 +42,7 @@ static std::vector<std::wstring> avCommands = {
     L"-shadow map -point light test",
     L"-normal & parallax mapping 1",
     L"-normal & parallax mapping 2",
-    L"-normal & parallax mapping 3",
     L"-HDR tone mapping test",
-    L"-HDR tone mapping autoexposure",
-    L"-bloom feature test"
 };
 
 bool regexTextFind(const std::wstring& srcText, const std::wstring& text);
@@ -95,25 +92,25 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
     HWND hButton3 = CreateWindowEx(0, L"BUTTON", L"Scene Titan Implosion Simulation", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
         15, 145, 400, 50, hWnd, (HMENU)ID_BUTTON3, hInstance, NULL);
 
-    HWND hButton4 = CreateWindowEx(0, L"BUTTON", L"Button", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+    HWND hButton4 = CreateWindowEx(0, L"BUTTON", L"Scene Dynamic Shadow Directional Light", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
         15, 210, 400, 50, hWnd, (HMENU)ID_BUTTON4, hInstance, NULL);
 
-    HWND hButton5 = CreateWindowEx(0, L"BUTTON", L"Button", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+    HWND hButton5 = CreateWindowEx(0, L"BUTTON", L"Scene Dynamic Shadow Point Light", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
         15, 275, 400, 50, hWnd, (HMENU)ID_BUTTON5, hInstance, NULL);
 
-    HWND hButton6 = CreateWindowEx(0, L"BUTTON", L"Button", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+    HWND hButton6 = CreateWindowEx(0, L"BUTTON", L"Scene Bloom Effect-> Upsampling, Downsampling", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
         15, 340, 400, 50, hWnd, (HMENU)ID_BUTTON6, hInstance, NULL);
 
-    HWND hButton7 = CreateWindowEx(0, L"BUTTON", L"Button", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+    HWND hButton7 = CreateWindowEx(0, L"BUTTON", L"Scene Parallax Occlusion Mapping", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
         15, 405, 400, 50, hWnd, (HMENU)ID_BUTTON7, hInstance, NULL);
 
-    HWND hButton8 = CreateWindowEx(0, L"BUTTON", L"Button", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+    HWND hButton8 = CreateWindowEx(0, L"BUTTON", L"Scene HDR Tone Mapping with Autoexposure", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
         15, 470, 400, 50, hWnd, (HMENU)ID_BUTTON8, hInstance, NULL);
 
-    HWND hButton9 = CreateWindowEx(0, L"BUTTON", L"Dbg - Toggle Developer Panel", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+    HWND hButton9 = CreateWindowEx(0, L"BUTTON", L"Debug - Toggle Developer Panel", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
         15, 535, 400, 50, hWnd, (HMENU)ID_BUTTON9, hInstance, NULL);
 
-    HWND hButton10 = CreateWindowEx(0, L"BUTTON", L"Dbg - Toggle Console Mode", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+    HWND hButton10 = CreateWindowEx(0, L"BUTTON", L"Debug - Toggle Console Mode", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
         15, 600, 400, 50, hWnd, (HMENU)ID_BUTTON10, hInstance, NULL);
 
     hButtonExecution = CreateWindowEx(0, L"BUTTON", L"Execute Console Command", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
@@ -208,22 +205,72 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         case ID_BUTTON4:
         {
+            if (!thScene)
+            {
+                thScene.reset(new std::thread(Scene::RenderScene18, hText));
+            }
+            else
+            {
+                Scene::ForceEnd();
+                thScene.get()->join();
+                thScene.reset(new std::thread(Scene::RenderScene18, hText));
+            }
             break;
         }
         case ID_BUTTON5:
         {
+            if (!thScene)
+            {
+                thScene.reset(new std::thread(Scene::RenderScene19, hText));
+            }
+            else
+            {
+                Scene::ForceEnd();
+                thScene.get()->join();
+                thScene.reset(new std::thread(Scene::RenderScene19, hText));
+            }
             break;
         }
         case ID_BUTTON6:
         {
+            if (!thScene)
+            {
+                thScene.reset(new std::thread(Scene::RenderScene17, hText));
+            }
+            else
+            {
+                Scene::ForceEnd();
+                thScene.get()->join();
+                thScene.reset(new std::thread(Scene::RenderScene17, hText));
+            }
             break;
         }
         case ID_BUTTON7:
         {
+            if (!thScene)
+            {
+                thScene.reset(new std::thread(Scene::RenderScene14, hText));
+            }
+            else
+            {
+                Scene::ForceEnd();
+                thScene.get()->join();
+                thScene.reset(new std::thread(Scene::RenderScene14, hText));
+            }
             break;
         }
         case ID_BUTTON8:
         {
+            if (!thScene)
+            {
+                thScene.reset(new std::thread(Scene::RenderScene16, hText));
+            }
+            else
+            {
+                Scene::ForceEnd();
+                thScene.get()->join();
+                thScene.reset(new std::thread(Scene::RenderScene16, hText));
+            }
             break;
         }
         case ID_BUTTON9:
@@ -454,22 +501,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 {
                     if (!thScene)
                     {
-                        thScene.reset(new std::thread(Scene::RenderScene14, hText));
-                        index = 10;
-                    }
-                    else
-                    {
-                        Scene::ForceEnd();
-                        thScene.get()->join();
-                        thScene.reset(new std::thread(Scene::RenderScene14, hText));
-                        index = 10;
-                    }
-                    SetWindowText(hText, L"");
-                    }
-                else if (regexTextFind(prevText, avCommands[11] + L"/"))
-                {
-                    if (!thScene)
-                    {
                         thScene.reset(new std::thread(Scene::RenderScene15, hText));
                         index = 11;
                     }
@@ -479,38 +510,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                         thScene.get()->join();
                         thScene.reset(new std::thread(Scene::RenderScene15, hText));
                         index = 11;
-                    }
-                    SetWindowText(hText, L"");
-                }
-                else if (regexTextFind(prevText, avCommands[12] + L"/"))
-                {
-                    if (!thScene)
-                    {
-                        thScene.reset(new std::thread(Scene::RenderScene16, hText));
-                        index = 12;
-                    }
-                    else
-                    {
-                        Scene::ForceEnd();
-                        thScene.get()->join();
-                        thScene.reset(new std::thread(Scene::RenderScene16, hText));
-                        index = 12;
-                    }
-                    SetWindowText(hText, L"");
-                }
-                else if (regexTextFind(prevText, avCommands[13] + L"/"))
-                {
-                    if (!thScene)
-                    {
-                        thScene.reset(new std::thread(Scene::RenderScene17, hText));
-                        index = 13;
-                    }
-                    else
-                    {
-                        Scene::ForceEnd();
-                        thScene.get()->join();
-                        thScene.reset(new std::thread(Scene::RenderScene17, hText));
-                        index = 13;
                     }
                     SetWindowText(hText, L"");
                 }

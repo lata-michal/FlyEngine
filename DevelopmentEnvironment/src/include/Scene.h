@@ -56,11 +56,5 @@ public:
 
 	static bool RenderScene19(HWND hText);
 
-	static bool RenderScene20(HWND hText);
-
-	static bool RenderScene21(HWND hText);
-
-	static bool RenderScene22(HWND hText);
-
 	static void ForceEnd();
 };

@@ -19,6 +19,7 @@
 #include <cstdlib>
 #include <array>
 #include <cmath>
+#include <thread>
 
 //GLAD
 #include <GLAD\glad.h>
