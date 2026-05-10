@@ -75,7 +75,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
     HWND hWnd = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW & ~WS_THICKFRAME, CLASS_NAME,
         L"Launcher", WS_OVERLAPPEDWINDOW & ~(WS_THICKFRAME | WS_MAXIMIZEBOX), 
-        1700, 400, 455, 720, NULL, NULL, hInstance, NULL);
+        CW_USEDEFAULT, CW_USEDEFAULT, 455, 720, NULL, NULL, hInstance, NULL);
 
     if (!hWnd)
         return -1;
@@ -277,12 +277,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             if (!bDevLogToggle)
             {
-                SetWindowPos(hWnd, NULL, CW_USEDEFAULT, CW_USEDEFAULT, 840, 720, SWP_NOMOVE);
+                SetWindowPos(hWnd, NULL, 0, 0, 840, 720, SWP_NOMOVE);
                 bDevLogToggle = !bDevLogToggle;
             }
             else
             {
-                SetWindowPos(hWnd, NULL, CW_USEDEFAULT, CW_USEDEFAULT, 455, 720, SWP_NOMOVE);
+                SetWindowPos(hWnd, NULL, 0, 0, 455, 720, SWP_NOMOVE);
                 SetWindowText(hText, L"");
                 bDevLogToggle = !bDevLogToggle;
             }

@@ -25,7 +25,7 @@ FlyEngine is a lightweight C++ graphics engine designed for 3D rendering applica
 
 The FlyEngine repository contains three main components, each serving a unique purpose:
 
-1. **FlyEngine**: The core graphics engine library, containing the essential classes and functions for rendering, shaders, textures, input handling, and more. This is the main component for users interested in building their own 3D applications or games. FlyEngine provides a flexible framework suitable for a wide range of graphics applications.
+1. **FlyEngine**: The core graphics engine library, containing the essential classes and functions for rendering, shaders, textures, input handling, and more. This is the main component for users interested in building their own 3D applications or games. FlyEngine provides a flexible framework suitable for a wide range of applications.
 
 2. **Development Environment**: A set of development and testing tools that demonstrate FlyEngine’s capabilities. This environment includes multiple pre-configured scenes showcasing various rendering techniques, shader effects, and visual styles. It serves as an internal testing ground for features, helping developers explore and validate FlyEngine’s functionalities.
 
@@ -37,12 +37,10 @@ The FlyEngine repository contains three main components, each serving a unique p
 
 ### Prerequisites
 
-- **C++ Compiler** (GCC, Clang, or Visual Studio)
-- **OpenGL**-compatible graphics card
-- **GLFW**: For window management and input handling
-- **GLAD**: For OpenGL function loading
-- **GLM**: For vector and matrix math operations
-- **Assimp**: For model loading
+- **CMake 3.20+**
+- **C++ Compiler** (C++20 support required: MSVC 2019/2022, GCC 10+, or Clang 10+)
+- **OpenGL 3.3+** compatible graphics card
+- **GLFW, GLAD, GLM, Assimp**: (Included in `Dependencies/` and managed by CMake)
 
 ### Building the Project
 
@@ -52,22 +50,23 @@ The FlyEngine repository contains three main components, each serving a unique p
    cd FlyEngine
    ```
 
-2. **Build the Project**:
-   Open `FlyEngine.sln` in Visual Studio and build the solution to generate the executable.
+2. **Build the Project with CMake**:
+   From the root directory, run:
 
-3. **Setting Up a New Project Using FlyEngine**:
-   To create a new project in the solution that uses FlyEngine, follow these steps:
-   - Add a reference to `FlyEngine.lib` in your project.
-   - Add the following paths to your **Additional Include Directories** in the project properties:
+   **Debug Build**:
+   ```bash
+   cmake -B build -DCMAKE_BUILD_TYPE=Debug
+   cmake --build build --config Debug
+   ```
 
-     ```
-     $(SolutionDir)FlyEngine\src\include;
-     $(SolutionDir)FlyEngine\src\vendor;
-     $(SolutionDir)Dependencies\GLFW\include\;
-     $(SolutionDir)Dependencies\GLAD\include\;
-     $(SolutionDir)Dependencies\ASSIMP\assimp-5.2.5\include;
-     $(SolutionDir)Dependencies\ASSIMP\assimp-5.2.5\contrib
-     ```
+   **Release Build**:
+   ```bash
+   cmake -B build -DCMAKE_BUILD_TYPE=Release
+   cmake --build build --config Release
+   ```
+
+3. **Running the Launcher**:
+   The executable and its resources will be located in `build/Launcher/[Config]/Launcher.exe`.
 
 ## Getting Started
 
