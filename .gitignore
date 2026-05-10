@@ -1,7 +1,11 @@
 # Build directories
 build/
-bin/
-obj/
+/bin/
+/obj/
+**/[Bb]in/
+**/[Oo]bj/
+!**/AssetLib/Obj/
+!**/AssetLib/OBJ/
 
 # Visual Studio files
 .vs/
