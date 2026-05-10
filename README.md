@@ -42,12 +42,11 @@ The FlyEngine repository contains three main components, each serving a unique p
 
 ### Prerequisites
 
-To build and run FlyEngine, ensure that your system meets the following requirements:
-
-- **Visual Studio 2022**: Required for building the project.
-- **OpenGL-compatible graphics card**: For rendering graphics.
-
-> **Note**: All necessary libraries (GLFW, GLAD, GLM, Assimp) are included with the project and do not require separate installation.
+- **CMake 3.20+**
+- **C++ Compiler (C++20 support required)**:
+  - **Windows**: Visual Studio 2022 **Build Tools** (the MSVC compiler is required; the full IDE is optional)
+- **OpenGL 3.3+** compatible graphics card
+- **Bundled Dependencies**: GLFW, GLAD, GLM, and Assimp are included in `Dependencies/` and managed by CMake
 
 ### Building the Project
 
